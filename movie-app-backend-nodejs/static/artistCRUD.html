@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            text-align: center;
+        }
+        button{
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            margin: 12px;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+        }
+        form{
+            text-align: center;
+            display: inline-block;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/artistScript.js"></script>
+    <title>Artist CRUD</title>
+</head>
+<body onload="init()">
+      <div class="form-group">
+        <label for="firstName">First Name:</label>
+        <input type="text" class="form-control" id="firstName">
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <input type="text" class="form-control" id="lastName">
+      </div>
+      <div class="form-group">
+        <button id="createArtistButton">Create</button>
+      </div>
+
+      <div class="form-group">
+        <label for="artistId">Artist Id:</label>
+        <input type="text" class="form-control" id="artistId">
+      </div>
+      <div class="form-group">
+        <label for="newFirstName">New First Name:</label>
+        <input type="text" class="form-control" id="newFirstName">
+      </div>
+      <div class="form-group">
+        <label for="newLastName">New Last Name:</label>
+        <input type="text" class="form-control" id="newLastName">
+      </div>
+
+      <div class="form-group">
+        <button id="getArtistByIdButton">Get By Id</button>
+      </div>
+      <div class="form-group">
+        <button id="updateArtistButton">Update</button>
+      </div>
+      <div class="form-group">
+        <button id="deleteArtistButton">Delete</button>
+      </div>
+
+      <div>
+        <table class="table table-striped" id="artistTable">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">firstName</th>
+                <th scope="col">lastName</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+    </div>
+</body>
+</html>

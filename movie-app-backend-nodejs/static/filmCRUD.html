@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            text-align: center;
+        }
+        button{
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            margin: 12px;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+        }
+        form{
+            text-align: center;
+            display: inline-block;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/filmScript.js"></script>
+    <title>Film CRUD</title>
+</head>
+<body onload="init()">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title">
+      </div>
+      <div class="form-group">
+        <label for="pegi">PEGI</label>
+        <input type="text" class="form-control" id="pegi">
+      </div>
+      <div class="form-group">
+        <label for="rating">Rating</label>
+        <input type="text" class="form-control" id="rating">
+      </div>
+      <div class="form-group">
+        <label for="synopsis">Synopsis</label>
+        <input type="text" class="form-control" id="synopsis">
+      </div>
+      <div class="form-group">
+        <label for="studioId">StudioId</label>
+        <input type="text" class="form-control" id="studioId">
+      </div>
+      <div class="form-group">
+        <label for="genreId">Genre Id</label>
+        <input type="text" class="form-control" id="genreId">
+      </div>
+      <div class="form-group">
+        <label for="countryId">Country Id</label>
+        <input type="text" class="form-control" id="countryId">
+      </div>
+
+      <div class="form-group">
+        <button for="createFilmButton" id="createFilmButton" class="button">Create</button>
+      </div>
+
+      <div class="form-group">
+        <label for="filmId">Film Id</label>
+        <input type="text" class="form-control" id="filmId">
+      </div>
+      <div class="form-group">
+        <label for="newTitle">New Title</label>
+        <input type="text" class="form-control" id="newTitle">
+      </div>
+      <div class="form-group">
+        <label for="newPegi">New PEGI</label>
+        <input type="text" class="form-control" id="newPegi">
+      </div>
+      <div class="form-group">
+        <label for="newRating">New Rating</label>
+        <input type="text" class="form-control" id="newRating">
+      </div>
+      <div class="form-group">
+        <label for="newSynopsis">New Synopsis</label>
+        <input type="text" class="form-control" id="newSynopsis">
+      </div>
+      <div class="form-group">
+        <label for="newStudioId">New Studio Id</label>
+        <input type="text" class="form-control" id="newStudioId">
+      </div>
+      <div class="form-group">
+        <label for="newGenreId">New Genre Id</label>
+        <input type="text" class="form-control" id="newGenreId">
+      </div>
+      <div class="form-group">
+        <label for="newCountryId">New Country Id</label>
+        <input type="text" class="form-control" id="newCountryId">
+      </div>
+
+      <div class="form-group">
+        <button id="getFilmByIdButton">Get By Id</button>
+      </div>
+      <div class="form-group">
+        <button id="updateFilmButton">Update</button>
+      </div>
+      <div class="form-group">
+        <button id="deleteFilmButton">Delete</button>
+      </div>
+
+      <div>
+        <table class="table table-striped" id="filmTable">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">title</th>
+                <th scope="col">pegi</th>
+                <th scope="col">rating</th>
+                <th scope="col">synopsis</th>
+                <th scope="col">studioId</th>
+                <th scope="col">genreId</th>
+                <th scope="col">countryId</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+    </div>
+</body>
+</html>

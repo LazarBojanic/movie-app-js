@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            text-align: center;
+        }
+        button{
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            margin: 12px;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+        }
+        form{
+            text-align: center;
+            display: inline-block;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/filmInListScript.js"></script>
+    <title>Film In List CRUD</title>
+</head>
+<body onload="init()">
+      <div class="form-group">
+        <label for="filmId">Film Id:</label>
+        <input type="text" class="form-control" id="filmId">
+      </div>
+      <div class="form-group">
+        <label for="filmListId">Film List Id:</label>
+        <input type="text" class="form-control" id="filmListId">
+      </div>
+      
+      <div class="form-group">
+        <button id="createFilmInListButton">Create</button>
+      </div>
+
+      <div class="form-group">
+        <label for="filmInListId">Film In List Id:</label>
+        <input type="text" class="form-control" id="filmInListId">
+      </div>
+      <div class="form-group">
+        <label for="newFilmId">New Film Id:</label>
+        <input type="text" class="form-control" id="newFilmId">
+      </div>
+      <div class="form-group">
+        <label for="newFilmListId">New Film List Id:</label>
+        <input type="text" class="form-control" id="newFilmListId">
+      </div>
+
+      <div class="form-group">
+        <button id="getFilmInListByIdButton">Get By Id</button>
+      </div>
+      <div class="form-group">
+        <button id="updateFilmInListButton">Update</button>
+      </div>
+      <div class="form-group">
+        <button id="deleteFilmInListButton">Delete</button>
+      </div>
+
+      <div>
+        <table class="table table-striped" id="filmInListTable">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">filmId</th>
+                <th scope="col">filmListId</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+    </div>
+</body>
+</html>
