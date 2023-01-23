@@ -1,4 +1,4 @@
-# movie-app-frontend-vuejs
+# temp-vue
 
 ## Project setup
 ```

@@ -30,7 +30,7 @@ export default {
 
   mounted(){
     this.filmIds = [];
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZDoiOjEsImVtYWlsIjoiYWRtaW4iLCJ1c2VyUm9sZSI6ImFkbWluIiwiaWF0IjoxNjc0NDQ0Mjg5LCJleHAiOjE2NzQ0NTE0ODl9.ZWevWlCB5sbUCpbTDENOXqTxPY3z2s_sQLIjBkN3_qU';
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZDoiOjEsImVtYWlsIjoiYWRtaW4iLCJ1c2VyUm9sZSI6ImFkbWluIiwiaWF0IjoxNjc0NDU3MDk3LCJleHAiOjE2NzQ0NjQyOTd9.EaImShnjNCYz7NScehYs4Ky7FoWpaO0L93wkmM1IXWs';
     fetch('http://localhost:8000/api/film/getAll', {
         headers: {
             'Authorization': `Bearer ${token}`
