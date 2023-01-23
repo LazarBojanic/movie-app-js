@@ -28,7 +28,7 @@
     watch: {
       
       objects(nVal, oVal) {
-        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZDoiOjEsImVtYWlsIjoiYWRtaW4iLCJ1c2VyUm9sZSI6ImFkbWluIiwiaWF0IjoxNjc0NDU3MDk3LCJleHAiOjE2NzQ0NjQyOTd9.EaImShnjNCYz7NScehYs4Ky7FoWpaO0L93wkmM1IXWs';
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZDoiOjEsImVtYWlsIjoiYWRtaW4iLCJ1c2VyUm9sZSI6ImFkbWluIiwiaWF0IjoxNjc0NTA5MDc1LCJleHAiOjE2NzQ1MTYyNzV9.zcQTYDW833GbJpXoU3WFCZGpR71QXnvk_GiI6aBlni0';
 
         this.films = [];
 
@@ -44,7 +44,7 @@
     },
 
     mounted() {
-      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZDoiOjEsImVtYWlsIjoiYWRtaW4iLCJ1c2VyUm9sZSI6ImFkbWluIiwiaWF0IjoxNjc0NDU3MDk3LCJleHAiOjE2NzQ0NjQyOTd9.EaImShnjNCYz7NScehYs4Ky7FoWpaO0L93wkmM1IXWs';
+      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZDoiOjEsImVtYWlsIjoiYWRtaW4iLCJ1c2VyUm9sZSI6ImFkbWluIiwiaWF0IjoxNjc0NTA5MDc1LCJleHAiOjE2NzQ1MTYyNzV9.zcQTYDW833GbJpXoU3WFCZGpR71QXnvk_GiI6aBlni0';
 
       this.objects.map( obj => {
         fetch(`http://localhost:8000/api/film/get/${obj}`, {
