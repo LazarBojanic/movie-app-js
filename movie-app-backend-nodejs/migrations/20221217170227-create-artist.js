@@ -10,12 +10,12 @@ module.exports = {
         unique: true,
         primaryKey: true
       },
-      firstName : {
+      artistName : {
         type: DataTypes.STRING,
         allowNull: false,
         unique: false
       },
-      lastName : {
+      imageUrl : {
         type: DataTypes.STRING,
         allowNull: true,
         unique: false

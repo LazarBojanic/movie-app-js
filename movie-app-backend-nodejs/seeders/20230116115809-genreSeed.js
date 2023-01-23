@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    return queryInterface.bulkInsert('genre', [
+    /*return queryInterface.bulkInsert('genre', [
       {
         genreName: 'drama',
         createdAt: new Date(),
@@ -29,7 +29,7 @@ module.exports = {
         updatedAt: new Date()
       }
 
-  ]);
+  ]);*/
   },
 
   async down (queryInterface, Sequelize) {

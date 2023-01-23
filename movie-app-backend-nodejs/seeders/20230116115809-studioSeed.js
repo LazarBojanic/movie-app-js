@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    return queryInterface.bulkInsert('studio', [
+    /*return queryInterface.bulkInsert('studio', [
       {
         studioName: 'Disney',
         createdAt: new Date(),
@@ -29,7 +29,7 @@ module.exports = {
         updatedAt: new Date()
       },
 
-  ]);
+  ]);*/
   },
 
   async down (queryInterface, Sequelize) {

@@ -12,16 +12,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Artist.init({
-    firstName : {
+    artistName : {
       type: DataTypes.STRING,
       allowNull: false,
       unique: false
     },
-    lastName : {
+    imageUrl : {
       type: DataTypes.STRING,
       allowNull: true,
       unique: false
-    },
+    }
     }
     ,{
       sequelize,

@@ -28,12 +28,21 @@ function authToken(req, res, next) {
 
   console.log(token);
   const decodedToken = jwt_decode(token);
-  if(decodedToken.userRole == 'admin' || decodedToken.userRole == 'moderator'){
-    const routesToCheck = ['/user/create', '/user/update', '/user/delete'];
-    
-    console.log(decodedToken.userRole);
-    if (routesToCheck.includes(req.path)){
+  if(decodedToken.userRole == 'admin' || decodedToken.userRole == 'moderator' || decodedToken.userRole == 'client'){
+    const moderatorForbiddenRoutes = ['/user/create', '/user/update', '/user/delete'];
+    if (moderatorForbiddenRoutes.includes(req.path)){
       if(decodedToken.userRole == 'moderator'){
+        return res.status(401).json({ msg: 'Not authenticated' });
+      }
+    }
+    const clientForbiddenRoutes = ['/artist/create', '/artist/update', '/artist/delete',
+                                   '/country/create', '/country/update', '/country/delete',
+                                   '/crewMember/create', '/crewMember/update', '/crewMember/delete',
+                                   '/film/create', '/film/update', '/film/delete', 
+                                   '/genre/create', '/genre/update', '/genre/delete',
+                                   '/studio/create', '/studio/update', '/studio/delete'];
+    if (clientForbiddenRoutes.includes(req.path)){
+      if(decodedToken.userRole == 'client'){
         return res.status(401).json({ msg: 'Not authenticated' });
       }
     }
@@ -191,12 +200,12 @@ router.get('/artist/get/:id', (req, res) => {
 router.post('/artist/create', (req, res) => {
 
   const schema = joi.object({
-    firstName: joi.string().required(),
-    lastName: joi.string().allow(null, '')
+    artistName: joi.string().required(),
+    imageUrl: joi.string().allow(null, '')
   });
   const {error, value} = schema.validate({
-    firstName: req.body.firstName,
-    lastName: req.body.lastName
+    artistName: req.body.firstName,
+    imageUrl: req.body.lastName
   });
 
   if(error){
@@ -204,7 +213,7 @@ router.post('/artist/create', (req, res) => {
     res.status(400).json({msg: msg});
   }
   else{
-    artist.create({firstName: req.body.firstName, lastName: req.body.lastName})
+    artist.create({artistName: req.body.artistName, imageUrl: req.body.imageUrl})
     .then(rows => res.json(rows))
     .catch(err => res.status(500).json(err));
   }
@@ -215,14 +224,12 @@ router.post('/artist/create', (req, res) => {
 router.put('/artist/update/:id', (req, res) => {
   
   const schema = joi.object({
-    id: joi.number().required(),
-    firstName: joi.string().required(),
-    lastName: joi.string().allow(null, '')
+    artistName: joi.string().required(),
+    imageUrl: joi.string().allow(null, '')
   });
   const {error, value} = schema.validate({
-    id: req.params.id,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName
+    artistName: req.body.firstName,
+    imageUrl: req.body.lastName
   });
 
   if(error){
@@ -230,7 +237,7 @@ router.put('/artist/update/:id', (req, res) => {
     res.status(400).json({msg: msg});
   }
   else{
-  artist.update({ firstName: req.body.firstName,  lastName: req.body.lastName},{ where: { id: req.params.id } } )
+  artist.update({ artistName: req.body.artistName, imageUrl: req.body.imageUrl},{ where: { id: req.params.id } } )
   .then(count => {
       console.log('Rows updated ' + count);
   })
@@ -491,21 +498,23 @@ router.post('/film/create', (req, res) => {
   console.log('creating film');
   const schema = joi.object({
     title: joi.string().required(),
-    pegi: joi.string().required(),
-    rating: joi.number().required(),
-    synopsis: joi.string().required(),
+    rating: joi.number().allow(null),
+    synopsis: joi.string().allow(null, ''),
+    releaseYear: joi.number(),
+    imageUrl: joi.string().allow(null, ''),
     studioId: joi.number().required(),
     genreId: joi.number().required(),
     countryId: joi.number().required()
   });
   const {error, value} = schema.validate({
     title: req.body.title,
-    pegi: req.body.pegi,
     rating: req.body.rating,
     synopsis: req.body.synopsis,
+    releaseYear: req.body.releaseYear,
+    imageUrl: req.body.imageUrl,
     studioId: req.body.studioId,
     genreId: req.body.genreId,
-    countryId: req.body.countryId
+    countryId: req.body.countryId,
   });
 
   if(error){
@@ -513,7 +522,7 @@ router.post('/film/create', (req, res) => {
     res.status(400).json({msg: msg});
   }
   else{
-    film.create({title: req.body.title, pegi: req.body.pegi, rating: req.body.rating, synopsis: req.body.synopsis, studioId: req.body.studioId, genreId: req.body.genreId, countryId: req.body.countryId})
+    film.create({title: req.body.title, rating: req.body.rating, synopsis: req.body.synopsis, releaseYear: req.body.releaseYear, imageUrl: req.body.imageUrl, studioId: req.body.studioId, genreId: req.body.genreId, countryId: req.body.countryId})
       .then(rows => res.json(rows))
       .catch(err => res.status(500).json(err));
   }
@@ -521,21 +530,23 @@ router.post('/film/create', (req, res) => {
 router.put('/film/update/:id', (req, res) => {
   const schema = joi.object({
     title: joi.string().required(),
-    pegi: joi.string().required(),
-    rating: joi.number().required(),
-    synopsis: joi.string().required(),
+    rating: joi.number().allow(null),
+    synopsis: joi.string().allow(null, ''),
+    releaseYear: joi.number(),
+    imageUrl: joi.string().allow(null, ''),
     studioId: joi.number().required(),
     genreId: joi.number().required(),
     countryId: joi.number().required()
   });
   const {error, value} = schema.validate({
     title: req.body.title,
-    pegi: req.body.pegi,
     rating: req.body.rating,
     synopsis: req.body.synopsis,
+    releaseYear: req.body.releaseYear,
+    imageUrl: req.body.imageUrl,
     studioId: req.body.studioId,
     genreId: req.body.genreId,
-    countryId: req.body.countryId
+    countryId: req.body.countryId,
   });
 
   if(error){
@@ -543,7 +554,7 @@ router.put('/film/update/:id', (req, res) => {
     res.status(400).json({msg: msg});
   }
   else{
-  film.update({ title: req.body.title, pegi: req.body.pegi, rating: req.body.rating, synopsis: req.body.synopsis, studioId: req.body.studioId, genreId: req.body.genreId, countryId: req.body.countryId },{ where: { id: req.params.id } } )
+  film.update({ title: req.body.title, rating: req.body.rating, synopsis: req.body.synopsis, releaseYear: req.body.releaseYear, imageUrl: req.body.imageUrl, studioId: req.body.studioId, genreId: req.body.genreId, countryId: req.body.countryId },{ where: { id: req.params.id } } )
   .then(count => {
       console.log('Rows updated ' + count);
   })
@@ -824,7 +835,7 @@ router.post('/filmList/create', (req, res) => {
   const schema = joi.object({
     serviceUserId: joi.number().required(),
     filmListName: joi.string().required(),
-    averageRating: joi.number().allow(null)
+    averageRating: joi.number().allow(null, '')
   });false
   const {error, value} = schema.validate({
     serviceUserId: req.body.serviceUserId,
@@ -849,7 +860,7 @@ router.put('/filmList/update/:id', (req, res) => {
     id: joi.number().required(),
     serviceUserId: joi.number().required(),
     filmListName: joi.string().required(),
-    averageRating: joi.number().allow(null)
+    averageRating: joi.number().allow(null, '')
   });
   const {error, value} = schema.validate({
     id: req.params.id,

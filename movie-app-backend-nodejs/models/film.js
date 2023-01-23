@@ -22,19 +22,24 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: false
     },
-    pegi : {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: false
-    },
     rating : {
       type: DataTypes.FLOAT,
-      allowNull: false,
+      allowNull: true,
       unique: false
     },
     synopsis : {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(1500),
+      allowNull: true,
+      unique: false
+    },
+    releaseYear : {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      unique: false
+    },
+    imageUrl : {
+      type: DataTypes.STRING,
+      allowNull: true,
       unique: false
     }
   }

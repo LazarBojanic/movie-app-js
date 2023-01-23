@@ -155,6 +155,9 @@ function loginUser(){
                             else if(res.userRole == 'moderator'){
                                 window.location.href = 'http://localhost:9000/admin/mainModerator';
                             }
+                            else if(res.userRole == 'client'){
+                                window.location.href = 'http://localhost:9000/admin/mainModerator';
+                            }
                         });
                 }
             });

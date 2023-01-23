@@ -3,7 +3,7 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     return queryInterface.bulkInsert('crewMember', [
-      {
+      /*{
         artistId: 1,
         filmId: 5,
         crewMemberRole: 'actor',
@@ -39,7 +39,7 @@ module.exports = {
         updatedAt: new Date()
       }
 
-  ]);
+  ]);*/
   },
 
   async down (queryInterface, Sequelize) {

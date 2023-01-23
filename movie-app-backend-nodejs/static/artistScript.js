@@ -18,12 +18,12 @@ function init(){
           e.preventDefault();
           const artistId = document.getElementById('artistId').value;
           const data = {
-              firstName: document.getElementById('newFirstName').value,
-              lastName: document.getElementById('newLastName').value
+              artistName: document.getElementById('newArtistName').value,
+              imageUrl: document.getElementById('newImageUrl').value
           };
           console.log(data.artistName);
-          document.getElementById('newFirstName').value = '';
-          document.getElementById('newLastName').value = '';
+          document.getElementById('newArtistName').value = '';
+          document.getElementById('newImageUrl').value = '';
           console.log(JSON.stringify(data));
           const token = getCookie('token');
           console.log(token);
@@ -62,8 +62,8 @@ function bindArtistsToTable(data){
         var tr = document.createElement('tr');
         tr.innerHTML =
         '<th scope="row">' + object.id + '</th>' +
-        '<td>' + object.firstName + '</td>' +
-        '<td>' + object.lastName + '</td>';
+        '<td>' + object.artistName + '</td>' +
+        '<td>' + object.imageUrl + '</td>';
         table.appendChild(tr);
     });
 }
@@ -72,8 +72,8 @@ function bindArtistToTable(data){
     var tr = document.createElement('tr');
         tr.innerHTML =
         '<th scope="row">' + data.id + '</th>' +
-        '<td>' + data.firstName + '</td>' +
-        '<td>' + data.lastName + '</td>';
+        '<td>' + data.artistName + '</td>' +
+        '<td>' + data.imageUrl + '</td>';
         table.appendChild(tr);
 }
 function getAllArtists() {
@@ -93,11 +93,11 @@ function createArtist() {
     document.getElementById('createArtistButton').addEventListener('click', e => {
         e.preventDefault();
         const data = {
-            firstName: document.getElementById('firstName').value,
-            lastName: document.getElementById('lastName').value
+            artistName: document.getElementById('artistName').value,
+            imageUrl: document.getElementById('imageUrl').value
         };
-        document.getElementById('firstName').value = '';
-        document.getElementById('lastName').value = '';
+        document.getElementById('artistName').value = '';
+        document.getElementById('imageUrl').value = '';
         console.log(JSON.stringify(data));
         const token = getCookie('token');
         console.log(token);

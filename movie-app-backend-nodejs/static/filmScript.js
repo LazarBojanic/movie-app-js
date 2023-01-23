@@ -21,20 +21,22 @@ function deleteAllTableRows(){
           const filmId = document.getElementById('filmId').value;
           const data = {
             title: document.getElementById('newTitle').value,
-            pegi: document.getElementById('newPegi').value,
             rating: parseFloat(document.getElementById('newRating').value),
             synopsis: document.getElementById('newSynopsis').value,
+            releaseYear: parseInt(document.getElementById('newReleaseYear').value),
+            imageUrl: document.getElementById('newImageUrl').value,
             studioId: parseInt(document.getElementById('newStudioId').value),
             genreId: parseInt(document.getElementById('newGenreId').value),
             countryId: parseInt(document.getElementById('newCountryId').value)
           };
           document.getElementById('newTitle').value = '';
-          document.getElementById('newPegi').value = '';
           document.getElementById('newRating').value = '';
           document.getElementById('newSynopsis').value = '';
+          document.getElementById('newReleaseYear').value = '';
+          document.getElementById('newImageUrl').value = '';
           document.getElementById('newStudioId').value = '';
           document.getElementById('newGenreId').value = '';
-          document.getElementById('countryId').value = '';
+          document.getElementById('newCountryId').value = '';
           console.log(JSON.stringify(data));
           const token = getCookie('token');
           console.log(token);
@@ -75,9 +77,10 @@ function bindFilmsToTable(data){
         tr.innerHTML =
         '<th scope="row">' + object.id + '</th>' +
         '<td>' + object.title + '</td>' +
-        '<td>' + object.pegi + '</td>' +
         '<td>' + object.rating + '</td>' +
         '<td>' + object.synopsis + '</td>' +
+        '<td>' + object.releaseYear + '</td>' +
+        '<td>' + object.imageUrl + '</td>' +
         '<td>' + object.studioId + '</td>'+
         '<td>' + object.genreId + '</td>' +
         '<td>' + object.countryId + '</td>';
@@ -90,9 +93,10 @@ function bindFilmToTable(data){
         tr.innerHTML =
         '<th scope="row">' + data.id + '</th>' +
         '<td>' + data.title + '</td>' +
-        '<td>' + data.pegi + '</td>' +
         '<td>' + data.rating + '</td>' +
         '<td>' + data.synopsis + '</td>' +
+        '<td>' + data.releaseYear + '</td>' +
+        '<td>' + data.imageUrl + '</td>' +
         '<td>' + data.studioId + '</td>' +
         '<td>' + data.genreId + '</td>' +
         '<td>' + data.countryId + '</td>';
@@ -116,17 +120,19 @@ function createFilm() {
         e.preventDefault();
         const data = {
             title: document.getElementById('title').value,
-            pegi: document.getElementById('pegi').value,
             rating: parseFloat(document.getElementById('rating').value),
             synopsis: document.getElementById('synopsis').value,
+            releaseYear: parseInt(document.getElementById('releaseYear').value),
+            imageUrl: document.getElementById('imageUrl').value,
             studioId: parseInt(document.getElementById('studioId').value),
             genreId: parseInt(document.getElementById('genreId').value),
             countryId: parseInt(document.getElementById('countryId').value)
         };
         document.getElementById('title').value = '';
-        document.getElementById('pegi').value = '';
         document.getElementById('rating').value = '';
         document.getElementById('synopsis').value = '';
+        document.getElementById('releaseYear').value = '';
+        document.getElementById('imageUrl').value = '';
         document.getElementById('studioId').value = '';
         document.getElementById('genreId').value = '';
         document.getElementById('countryId').value = '';
