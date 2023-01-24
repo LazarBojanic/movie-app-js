@@ -1,17 +1,38 @@
 <template>
   <div id="app">
-    <div id="nav">
-    <router-link to="/home">Home</router-link>
-    <router-link to="/about">About</router-link>
-    <router-link to="/browseFilms">Browse Films</router-link>
-    <router-link to="/login">Login</router-link>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <router-link class="nav-link" to="/home">Home</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/about">About</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/browseFilms">Browse Films</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/login">Login</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/register">Register</router-link>
+          </li>
+        </ul>
+      </div>
+    </nav>
     <router-view/>
   </div>
 </template>
 
 <script>
-
+export default {
+   data() {
+      return {
+         
+      }
+   }
+}
 </script>
 
 <style>
@@ -22,6 +43,8 @@
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  background-image: url('@/assets/background.jpg');
+  background-size: cover;
 }
 
 #nav {

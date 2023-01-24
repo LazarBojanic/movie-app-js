@@ -12,8 +12,11 @@ const { sequelize, serviceUser } = require('../models');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-router.post('/register', async(req, res) => {
+router.post('/register', (req, res) => {
+  console.log('registiring');
+  
   const { username, email, pass, userRole } = req.body;
+  console.log(`${username} ${email} ${pass} ${userRole}`);
   if(username == null || email == null || pass == null || userRole == null){
     return res.status(400).json({ 'message': 'Username, email and password are required.' });
   }
@@ -21,7 +24,7 @@ router.post('/register', async(req, res) => {
     return res.status(409).json({ 'message': 'Email already in use.' });
   }*/
   try{
-    const hashedPass = await bcrypt.hash(pass, 10);
+    const hashedPass = bcrypt.hashSync(pass, 10);
     serviceUser.create({username: username, email: email, pass: hashedPass, userRole: userRole})
     .then(rows => res.json(rows))
     .catch(err => res.status(500).json(err));

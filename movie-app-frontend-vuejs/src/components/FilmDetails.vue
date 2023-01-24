@@ -31,5 +31,16 @@
   <style scoped>
     .film-detail {
       margin-top: 10px;
+      border-style: solid;
+      border-color: black;
+      border-radius: 3px;
+      display: inline-table;
+      font-size: 2em; /* increase the font size */
+      color: rgb(64, 212, 238); /* change the text color */
+      font-weight: bold;
+      text-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1;
     }
+    .outline {
+        text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+    } 
   </style>

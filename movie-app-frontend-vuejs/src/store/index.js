@@ -5,14 +5,24 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    film: {}
+    film: {},
+    user: null,
+    errors: {}
   },
   getters: {
-    film: state => state.film
+    film: state => state.film,
+    user: state => state.user
   },
   mutations: {
-    setFilm(state, film) {
+    SET_FILM(state, film) {
       state.film = film;
+    },
+    SET_USER: (state, user) => {
+      state.user = user
+      state.errors = {}
+    },
+    SET_ERRORS: (state, errors) => {
+      state.errors = errors
     }
   },
   actions: {
@@ -24,9 +34,29 @@ export default new Vuex.Store({
         }})
         .then(res => res.json())
         .then(film => {
-          commit('setFilm', film);
+          commit('SET_FILM', film);
         });
+    },
+    register({ commit }, credentials) {
+      //console.log(credentials);
+      try {
+        const res = fetch('http://localhost:8500/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(credentials)
+        })
+        const data = res.json()
+        if (!res.ok) {
+          throw new Error(data.message)
+        }
+        commit('SET_USER', data)
+      } catch (error) {
+        commit('SET_ERRORS', error)
+      }
     }
+
   },
   modules: {
   }

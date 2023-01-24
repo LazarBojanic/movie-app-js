@@ -2,14 +2,14 @@
   <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav d-flex justify-content-center">
           <li class="nav-item">
-            <form class="form-inline my-2 my-lg-0">
-              <input class="form-control mr-sm-2" type="search" placeholder="Search films" aria-label="Search" v-model="searchText">
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit" @click.prevent="searchFilms">Search</button>
-            </form>
+              <form class="form-inline my-2 my-lg-0">
+                  <input class="form-control mr-sm-2" type="search" placeholder="Search films" aria-label="Search" v-model="searchText">
+                  <button class="btn btn-outline-success my-2 my-sm-0 custom-button" type="submit" @click.prevent="searchFilms">Search</button>
+              </form>
           </li>
-        </ul>
+      </ul>
       </div>
     </nav>
     <div class="row">
@@ -101,3 +101,20 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .navbar {
+    border: 3px solid rgb(59, 15, 110) !important;
+    padding: 10px !important;
+    margin: auto !important;
+    background-color: rgba(70, 19, 165, 0.247) !important;
+    border: 0 !important;
+  }
+  .navbar-nav{
+    display: flex !important;
+    justify-content: center !important;
+  }
+  .custom-button {
+    background-color: #0b2cbe;
+    color: #c8e4ff;
+  }
+</style>

@@ -475,7 +475,7 @@ router.delete('/crewMember/delete/:id', (req, res) => {
 
 
 router.get('/film/getAll', (req, res) => {
-  film.findAll()
+  film.findAll({order: [["title", "ASC"]]})
       .then( rows => res.json(rows))
       .catch( err => res.status(500).json(err));
 });
@@ -514,21 +514,10 @@ router.get('/film/search/:searchTerm', (req, res) => {
   else{
     const searchTerm = req.params.searchTerm;
     film.findAll({where: {
-       [Op.or]: [
-        {
-          title: {
-            [Op.like]:
-            `%${searchTerm}%`
-          }
-        },
-        {
-          synopsis: {
-            [Op.like]:
-            `%${searchTerm}%`
-          }
-        }
-       ]
-      }})
+      title: {
+          [Op.iLike]: `%${searchTerm}%`
+      }
+  }, order: [["title", "ASC"]]})
       .then( rows => res.json(rows))
       .catch( err => res.status(500).json(err));
 
