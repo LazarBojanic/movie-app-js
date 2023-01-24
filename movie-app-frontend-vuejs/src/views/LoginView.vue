@@ -1,46 +1,56 @@
 <template>
-    <div id="app">
-      <Header :title = "title"/>
-      <p>
-        <button @click="login()">Login</button>
-      </p>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">Login</div>
+          <div class="card-body">
+            <form @submit.prevent="submitForm">
+              <div class="form-group">
+                <label>Email:</label>
+                <input class="form-control" type="text" v-model="email" />
+              </div>
+              <div class="form-group">
+                <label>Pass:</label>
+                <input class="form-control" type="password" v-model="pass" />
+              </div>
+              <button class="btn btn-primary" type="submit">Login</button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-  </template>
-  
-  <script>
-  import Header from '../components/Header.vue'
-  
-  export default {
-    name: 'LoginView',
-    components: {
-      Header
-    },
-    data(){
-      return{
-        title: "Login"
+  </div>
+</template>
+
+<script>
+import Cookies from 'js-cookie'
+
+export default {
+  data() {
+    return {
+      email: "",
+      pass: "",
+    };
+  },
+  methods: {
+    async submitForm() {
+      const res = await fetch("http://localhost:8500/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: this.email,
+          pass: this.pass,
+        }),
+      });
+      const data = await res.json();
+      if (data.token) {
+        Cookies.set('token', data.token);
+        this.$router.push({ name: 'browseFilms' });
       }
     },
-  
-    mounted(){
-      
-    },
-  
-    methods: {
-      login(){
-        
-      }
-    }
-  }
-  </script>
-  
-  <style>
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-  }
-  </style>
-  
+  },
+};
+</script>

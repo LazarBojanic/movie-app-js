@@ -7,11 +7,14 @@ const jwt_decode = require('jwt-decode');
 router.use(cors());
 router.use(express.json());
 router.use(express.urlencoded({extended: true}));
-const { sequelize, artist, crewMember, film, filmInLibrary, filmInList, filmList, serviceUser, studio, genre, country } = require('../models');
+const { artist, crewMember, film, filmInLibrary, filmInList, filmList, serviceUser, studio, genre, country } = require('../models');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const joi = require('joi');
 const { default: jwtDecode } = require('jwt-decode');
+
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 
 function authToken(req, res, next) {
@@ -494,6 +497,44 @@ router.get('/film/get/:id', (req, res) => {
       .catch( err => res.status(500).json(err));
   }
 });
+
+
+router.get('/film/search/:searchTerm', (req, res) => {
+  const schema = joi.object({
+    searchTerm: joi.string()
+  });
+  const {error, value} = schema.validate({
+    searchTerm: req.params.searchTerm
+  });
+
+  if(error){
+    msg = error;
+    res.status(400).json({msg: msg});
+  }
+  else{
+    const searchTerm = req.params.searchTerm;
+    film.findAll({where: {
+       [Op.or]: [
+        {
+          title: {
+            [Op.like]:
+            `%${searchTerm}%`
+          }
+        },
+        {
+          synopsis: {
+            [Op.like]:
+            `%${searchTerm}%`
+          }
+        }
+       ]
+      }})
+      .then( rows => res.json(rows))
+      .catch( err => res.status(500).json(err));
+
+  }
+});
+
 router.post('/film/create', (req, res) => {
   console.log('creating film');
   const schema = joi.object({

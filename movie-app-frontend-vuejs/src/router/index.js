@@ -5,7 +5,8 @@ import App from '../App.vue'
 import LoginView from '../views/LoginView.vue'
 import AboutView from '../views/AboutView.vue'
 import HomeView from '../views/HomeView.vue'
-import BrowseFilms from '../views/BrowseFilms.vue'
+import BrowseFilmsView from '../views/BrowseFilmsView.vue'
+import TestView from '../views/TestView.vue'
 
 Vue.use(VueRouter)
 
@@ -28,8 +29,13 @@ const routes = [
   {
     path: '/browseFilms',
     name: 'browseFilms',
-    component: BrowseFilms
-  }
+    component: BrowseFilmsView
+  },
+  {
+    path: '/',
+    name: 'app',
+    component: App
+  },
 ]
 
 const router = new VueRouter({
