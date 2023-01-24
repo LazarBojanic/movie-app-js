@@ -1,5 +1,5 @@
 <template>
-    <div class="film">
+    <div class="film" @click="navigateToFilmDetailPage">
       <h3>{{ film.title }}</h3>
       
       <img v-if="film.imageUrl" :src=filmImageUrl />
@@ -13,7 +13,7 @@
   </template>
   
   <script>
-  
+  import { mapActions } from 'vuex';
     export default {
       name: 'Film',
       
@@ -29,6 +29,14 @@
         this.filmImageUrl = 'https://image.tmdb.org/t/p/w154'.concat(this.film.imageUrl);
         //alert(this.filmImageUrl);
       },
+      methods: {
+        ...mapActions(['getFilm']),
+        navigateToFilmDetailPage() {
+          this.getFilm(this.film.id).then(() => {
+            this.$router.push({ name: 'filmDetails', params: { id: this.film.id } });
+          });
+        }
+      }
     }
   
   </script>

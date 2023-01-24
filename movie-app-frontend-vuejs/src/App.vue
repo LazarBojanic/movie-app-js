@@ -4,7 +4,7 @@
     <router-link to="/home">Home</router-link>
     <router-link to="/about">About</router-link>
     <router-link to="/browseFilms">Browse Films</router-link>
-    <router-link to="/testView">Test View</router-link>
+    <router-link to="/login">Login</router-link>
     </div>
     <router-view/>
   </div>
@@ -30,6 +30,7 @@
 
 #nav a{
   font-weight: bold;
+  padding: 10px;
   color: #2c3e50;
 }
 
