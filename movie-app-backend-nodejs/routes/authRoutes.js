@@ -65,5 +65,12 @@ router.post('/login', (req, res) => {
       .catch( err => res.status(500).json(err));
 });
 
+router.post('/getTokenRole', (req, res) => {
+  const { token } = req.body;
+  const decodedToken = jwt_decode(token);
+    //console.log(decodedToken.userRole);
+    res.json({ userRole: decodedToken.userRole });
+});
+
 
 module.exports = router;

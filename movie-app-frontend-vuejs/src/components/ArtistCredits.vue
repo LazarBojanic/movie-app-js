@@ -13,7 +13,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="credit in artistCredits" :key="credit.film.id">
+        <tr v-for="credit in artistCredits" :key="credit.film.filmId">
           <td>{{ credit.film.title }}</td>
           <td>{{ credit.film.releaseYear }}</td>
           <td>{{ credit.crewMemberRole }}</td>
@@ -46,7 +46,7 @@ export default {
   mounted() {
     //this.$store.dispatch('fetchArtist', this.$route.params.id);
     const token = Cookies.get('token');
-    fetch('http://localhost:8000/api/credit/getAllByArtistId/'.concat(this.getArtist.id), {
+    fetch('http://localhost:8000/api/crewMember/getAllByArtistId/'.concat(this.getArtist.id), {
       headers: {
           'Authorization': `Bearer ${token}`
       }})

@@ -11,6 +11,7 @@ import FilmDetailsView from '../views/FilmDetailsView.vue'
 import BrowseArtistsView from '../views/BrowseArtistsView.vue'
 import ArtistCreditsView from '../views/ArtistCreditsView.vue'
 import UserProfileView from '../views/UserProfileView.vue'
+import FilmListView from '../views/FilmListView.vue'
 
 Vue.use(VueRouter)
 
@@ -51,11 +52,6 @@ const routes = [
     component: FilmDetailsView
   },
   {
-    path: '/',
-    name: 'app',
-    component: App
-  },
-  {
     path: '/browseArtists',
     name: 'browseArtists',
     component: BrowseArtistsView
@@ -69,6 +65,11 @@ const routes = [
     path: '/userProfile',
     name: 'userProfile',
     component: UserProfileView
+  },
+  {
+    path: '/filmList',
+    name: 'filmList',
+    component: FilmListView
   }
 ]
 

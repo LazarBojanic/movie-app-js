@@ -10,7 +10,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsToMany(models.artist, {through: models.crewMember});
       this.belongsToMany(models.serviceUser, {through: models.filmInLibrary});
-      this.belongsToMany(models.filmList, {through: models.filmInList});
+      
+      this.hasMany(models.filmInList, { foreignKey: 'filmId'/* , as: 'filmsInList'*/});
+
       this.belongsTo(models.studio);
       this.belongsTo(models.genre);
       this.belongsTo(models.country);

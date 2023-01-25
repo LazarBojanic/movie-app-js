@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       /*this.hasMany(models.filmInLibrary);*/
       this.hasMany(models.filmList);
-      //this.belongsToMany(models.film, {through: models.filmInLibrary});
     }
   };
   ServiceUser.init({

@@ -41,7 +41,7 @@
   <style scoped>
   
     .artist {
-      margin-top: 10px;
+      margin-top: 25px;
       border-style: solid;
       border-color: black;
       display: inline-table;

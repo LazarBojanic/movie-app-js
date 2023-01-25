@@ -24,6 +24,10 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/register">Register</router-link>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" @click.prevent="logout">Logout</a>
+          </li>
+
         </ul>
       </div>
     </nav>
@@ -32,12 +36,21 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie'
+import router from './router';
 export default {
    data() {
       return {
-         
+         token: Cookies.get('token')
       }
-   }
+   },
+   
+    methods:{
+      logout(){
+        Cookies.remove('token');
+        router.push({name: 'login'});
+      }
+    }
 }
 </script>
 
@@ -52,7 +65,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 30px;
+  margin-top: 10px !important;
   /*background-image: url('@/assets/background.jpg');
   background-size: cover;*/
   background-color: #2c3e50;
@@ -62,12 +75,12 @@ export default {
 
 
 #nav {
-  padding: 30px;
+  padding: 10px !important;
 }
 
 #nav a{
   font-weight: bold;
-  padding: 10px;
+  padding: 10px !important;
   color: #2c3e50;
 }
 

@@ -1,13 +1,13 @@
 <template>
-    <div class="film" @click="navigateToFilmDetailPage" @mousedown="clicked = true" @mouseup="clicked = false" :class="{'clicked': clicked }">
-      <h3>{{ film.title }}</h3>
+    <div class="filmInList" @click="navigateToFilmDetailPage" @mousedown="clicked = true" @mouseup="clicked = false" :class="{'clicked': clicked }">
+      <h3>{{ filmInListObject.film.title }}</h3>
       
-      <img v-if="film.imageUrl" :src=filmImageUrl />
+      <img v-if="filmInListObject.film.imageUrl" :src=filmImageUrl />
       <p v-else>Image not available</p>
       
       <ul>
-        <li>Rating: {{ film.rating }}</li>
-        <li>Release Year: {{ film.releaseYear }}</li>
+        <li>Rating: {{ filmInListObject.film.rating }}</li>
+        <li>{{ filmInListObject.film.releaseYear }}</li>
       </ul>
     </div>
   </template>
@@ -15,10 +15,14 @@
   <script>
   import { mapState, mapActions, mapGetters } from 'vuex';
     export default {
-      name: 'Film',
+      name: 'FilmInList',
       
       props: {
-        film: Object
+        filmInListObject: Object
+      },
+      computed:{
+        ...mapGetters(['getFilmInList']),
+        ...mapGetters(['getFilmList'])
       },
       data() {
         return {
@@ -27,15 +31,24 @@
         }
       },
       mounted() {
-        this.filmImageUrl = 'https://image.tmdb.org/t/p/w154'.concat(this.film.imageUrl);
-        //alert(this.filmImageUrl);
+        this.filmImageUrl = 'https://image.tmdb.org/t/p/w154'.concat(this.filmInListObject.film.imageUrl);
       },
       methods: {
         ...mapActions(['fetchFilm']),
+        ...mapActions(['fetchFilmList']),
+        ...mapActions(['fetchFilmInList']),
         navigateToFilmDetailPage() {
-          this.fetchFilm(this.film.id).then(() => {
-            this.$router.push({ name: 'filmDetails', params: { id: this.film.id } });
-          });
+          const data = {
+          filmListId: this.filmInListObject.filmList.filmListId,
+          filmId: this.filmInListObject.film.filmId,
+        }
+          this.fetchFilmInList(data).then(() => {
+            this.fetchFilm(this.getFilmInList.film.filmId).then(() => {
+              this.$router.push({ name: 'filmDetails', params: { id: this.getFilmInList.film.filmId } });
+            })
+           
+          })
+          
         }
       }
     }
@@ -43,8 +56,8 @@
   </script>
   
   <style scoped>
-    .film {
-      margin-top: 25px;
+    .filmInList {
+      margin-top: 10px;
       border-style: solid;
       border-color: black;
       border-radius: 3px;
@@ -54,19 +67,19 @@
       font-weight: bold;
       text-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1;
       width: 15vw;
-      height: 26vw;
+      height: 18vw;
       font-family: 'Century Gothic', sans-serif; 
     }
 
      /* Add styles for mouse hover */
-  .film:hover {
+  .filmInList:hover {
     cursor: pointer; /* Change cursor to pointer */
     box-shadow: 0px 0px 10px #ccc; /* Add shadow */
     transform: scale(1.05); /* Scale up the card slightly */
   }
 
   /* Add styles for mouse click */
-  .film.clicked {
+  .filmInList.clicked {
     transform: scale(0.95); /* Scale down the card slightly */
     border-color: #007bff; /* Change border color */
   }
