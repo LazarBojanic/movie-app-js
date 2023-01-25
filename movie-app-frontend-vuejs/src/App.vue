@@ -13,6 +13,12 @@
             <router-link class="nav-link" to="/browseFilms">Browse Films</router-link>
           </li>
           <li class="nav-item">
+            <router-link class="nav-link" to="/browseArtists">Browse Artists</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/userProfile">Profile</router-link>
+          </li>
+          <li class="nav-item">
             <router-link class="nav-link" to="/login">Login</router-link>
           </li>
           <li class="nav-item">
@@ -36,16 +42,24 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Century+Gothic&display=swap');
+:root {
+      font-family: 'Century Gothic', sans-serif;
+  }
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Century Gothic', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
-  background-image: url('@/assets/background.jpg');
-  background-size: cover;
+  margin-top: 30px;
+  /*background-image: url('@/assets/background.jpg');
+  background-size: cover;*/
+  background-color: #2c3e50;
+  width: 100% !important;
+  height: 100% !important;
 }
+
 
 #nav {
   padding: 30px;

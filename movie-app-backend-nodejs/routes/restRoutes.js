@@ -11,7 +11,7 @@ const { artist, crewMember, film, filmInLibrary, filmInList, filmList, serviceUs
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const joi = require('joi');
-const { default: jwtDecode } = require('jwt-decode');
+
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -29,8 +29,9 @@ function authToken(req, res, next) {
 
   if (token == null) return res.status(401).json({ msg: 'Not authenticated' });
 
-  console.log(token);
+  //console.log(token);
   const decodedToken = jwt_decode(token);
+  console.log(decodedToken.userRole);
   if(decodedToken.userRole == 'admin' || decodedToken.userRole == 'moderator' || decodedToken.userRole == 'client'){
     const moderatorForbiddenRoutes = ['/user/create', '/user/update', '/user/delete'];
     if (moderatorForbiddenRoutes.includes(req.path)){
@@ -85,6 +86,15 @@ router.get('/user/get/:id', (req, res) => {
       .catch( err => res.status(500).json(err));
   }
 });
+router.get('/user/getByToken/:token', (req, res) => {
+  const token = req.params.token;
+  
+  const decodedToken = jwt_decode(token);
+  serviceUser.findOne({where: { id: decodedToken.id }})
+      .then( row => res.json(row))
+      .catch( err => res.status(500).json(err));
+});
+
 
 router.post('/user/create', async(req, res) => {
   const { username, email, pass, userRole } = req.body;
@@ -177,7 +187,7 @@ router.delete('/user/delete/:id', (req, res) => {
 
 
 router.get('/artist/getAll', (req, res) => {
-  artist.findAll()
+  artist.findAll({order: [["artistName", "ASC"]]})
       .then( rows => res.json(rows))
       .catch( err => res.status(500).json(err));
 });
@@ -197,6 +207,30 @@ router.get('/artist/get/:id', (req, res) => {
   artist.findOne({where: { id: req.params.id}})
       .then( row => res.json(row))
       .catch( err => res.status(500).json(err));
+  }
+});
+router.get('/artist/search/:searchTerm', (req, res) => {
+  const schema = joi.object({
+    searchTerm: joi.string()
+  });
+  const {error, value} = schema.validate({
+    searchTerm: req.params.searchTerm
+  });
+
+  if(error){
+    msg = error;
+    res.status(400).json({msg: msg});
+  }
+  else{
+    const searchTerm = req.params.searchTerm;
+    artist.findAll({where: {
+      artistName: {
+          [Op.iLike]: `%${searchTerm}%`
+      }
+  }, order: [["artistName", "ASC"]]})
+      .then( rows => res.json(rows))
+      .catch( err => res.status(500).json(err));
+
   }
 });
 
@@ -392,6 +426,7 @@ router.get('/crewMember/get/:id', (req, res) => {
   }
 });
 
+
 router.post('/crewMember/create', (req, res) => {
   const schema = joi.object({
     artistId: joi.number().required(),
@@ -497,6 +532,41 @@ router.get('/film/get/:id', (req, res) => {
       .catch( err => res.status(500).json(err));
   }
 });
+
+router.get('/credit/getAllByArtistId/:artistId', (req, res) => {
+  const schema = joi.object({
+    id: joi.number().required()
+  });
+  const {error, value} = schema.validate({
+    id: req.params.artistId
+  });
+
+  if(error){
+    msg = error;
+    res.status(400).json({msg: msg});
+  }
+  else{
+    crewMember.findAll({
+      attributes:['crewMemberRole'],
+      include: [
+        {
+          model: artist,
+          attributes: [['id', 'artistId'], 'artistName'],
+          where: {id: req.params.artistId}
+        },
+        {
+          model: film,
+          attributes: [['id', 'filmId'], 'title','releaseYear']
+        }
+      ]
+    })
+    .then(rows => {
+        res.json(rows);
+    });
+  }
+});
+
+
 
 
 router.get('/film/search/:searchTerm', (req, res) => {

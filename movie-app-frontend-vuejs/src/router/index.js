@@ -8,6 +8,9 @@ import AboutView from '../views/AboutView.vue'
 import HomeView from '../views/HomeView.vue'
 import BrowseFilmsView from '../views/BrowseFilmsView.vue'
 import FilmDetailsView from '../views/FilmDetailsView.vue'
+import BrowseArtistsView from '../views/BrowseArtistsView.vue'
+import ArtistCreditsView from '../views/ArtistCreditsView.vue'
+import UserProfileView from '../views/UserProfileView.vue'
 
 Vue.use(VueRouter)
 
@@ -51,6 +54,21 @@ const routes = [
     path: '/',
     name: 'app',
     component: App
+  },
+  {
+    path: '/browseArtists',
+    name: 'browseArtists',
+    component: BrowseArtistsView
+  },
+  {
+    path: '/artistCredits',
+    name: 'artistCredits',
+    component: ArtistCreditsView
+  },
+  {
+    path: '/userProfile',
+    name: 'userProfile',
+    component: UserProfileView
   }
 ]
 

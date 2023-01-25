@@ -1,12 +1,12 @@
 <template>
   <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav d-flex justify-content-center">
+      <div class="collapse navbar-collapse " id="navbarNav">
+        <ul class="navbar-nav d-flex justify-content-center ms-auto">
           <li class="nav-item">
-              <form class="form-inline my-2 my-lg-0">
+              <form class="form-inline my-2 my-lg-0 d-flex justify-content-center">
                   <input class="form-control mr-sm-2" type="search" placeholder="Search films" aria-label="Search" v-model="searchText">
-                  <button class="btn btn-outline-success my-2 my-sm-0 custom-button" type="submit" @click.prevent="searchFilms">Search</button>
+                  <button class="btn btn-outline-success my-2 my-sm-0 custom-button" type="submit" @click.prevent="searchFilmsButton">Search</button>
               </form>
           </li>
       </ul>
@@ -36,7 +36,7 @@
 <script>
 import Film from '@/components/Film.vue'
 import Cookies from 'js-cookie'
-
+import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   name: 'Films',
   components: {
@@ -44,36 +44,31 @@ export default {
   },
   data() {
     return {
-      films: [],
+
       currentPage: 1,
       filmsPerPage: 20,
       searchText: '',
     }
   },
   computed: {
+      ...mapGetters([
+      'getFilms'
+    ]),
     currentPageFilms() {
-      const start = (this.currentPage - 1) * this.filmsPerPage
-      return this.films.slice(start, start + this.filmsPerPage)
+      const start = (this.currentPage - 1) * this.filmsPerPage;
+      return Object.values(this.getFilms).slice(start, start + this.filmsPerPage);
     },
     pages() {
-      return Array.from({ length: Math.ceil(this.films.length / this.filmsPerPage) }, (_, i) => i + 1)
+      return Array.from({ length: Math.ceil(Object.values(this.getFilms).length / this.filmsPerPage) }, (_, i) => i + 1);
     }
   },
   mounted() {
 
-  this.filmIds = [];
-  const token = Cookies.get('token');
-  fetch('http://localhost:8000/api/film/getAll', {
-      headers: {
-          'Authorization': `Bearer ${token}`
-      }})
-  .then(res => res.json())
-  .then(res => {
-    this.films = res;
-  });
+    this.fetchFilms();
 
   },
   methods: {
+    ...mapActions(["fetchFilms"]),
     goToPage(page) {
       this.currentPage = page
     },
@@ -87,27 +82,24 @@ export default {
         this.currentPage++
       }
     },
-    searchFilms(){
-      const token = Cookies.get('token');
-      fetch('http://localhost:8000/api/film/search/'.concat(this.searchText), {
-          headers: {
-              'Authorization': `Bearer ${token}`
-          }})
-      .then(res => res.json())
-      .then(res => {
-        this.films = res;
-      });
+    searchFilmsButton(){
+      this.$store.dispatch('searchFilms', this.searchText);
     }
   }
 }
 </script>
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Century+Gothic&display=swap');
+:root {
+      font-family: 'Century Gothic', sans-serif;
+  }
   .navbar {
     border: 3px solid rgb(59, 15, 110) !important;
     padding: 10px !important;
     margin: auto !important;
     background-color: rgba(70, 19, 165, 0.247) !important;
     border: 0 !important;
+    font-family: 'Century Gothic', sans-serif !important;
   }
   .navbar-nav{
     display: flex !important;
@@ -116,5 +108,6 @@ export default {
   .custom-button {
     background-color: #0b2cbe;
     color: #c8e4ff;
+    font-family: 'Century Gothic', sans-serif;
   }
 </style>

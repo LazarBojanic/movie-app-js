@@ -1,32 +1,48 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Cookies from 'js-cookie'
+import jwtDecode from 'jwt-decode'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     film: {},
+    films: {},
+    artist: {},
+    artists: {},
     user: null,
     errors: {}
   },
   getters: {
-    film: state => state.film,
-    user: state => state.user
+    getFilm: state => state.film,
+    getFilms: state => state.films,
+    getArtist: state => state.artist,
+    getArtists: state => state.artists,
+    getUser: state => state.user
   },
   mutations: {
-    SET_FILM(state, film) {
+    setArtist(state, artist) {
+      state.artist = artist;
+    },
+    setArtists(state, artists) {
+      state.artists = artists;
+    },
+    setFilm(state, film) {
       state.film = film;
     },
-    SET_USER: (state, user) => {
+    setFilms(state, films) {
+      state.films = films;
+    },
+    setUser: (state, user) => {
       state.user = user
       state.errors = {}
     },
-    SET_ERRORS: (state, errors) => {
+    setErrors: (state, errors) => {
       state.errors = errors
     }
   },
   actions: {
-    getFilm({ commit }, id) {
+    fetchFilm({ commit }, id) {
       const token = Cookies.get('token');
       return fetch(`http://localhost:8000/api/film/get/${id}`, {
         headers: {
@@ -34,7 +50,74 @@ export default new Vuex.Store({
         }})
         .then(res => res.json())
         .then(film => {
-          commit('SET_FILM', film);
+          commit('setFilm', film);
+        });
+    },
+    fetchFilms({ commit }) {
+      const token = Cookies.get('token');
+      return fetch('http://localhost:8000/api/film/getAll', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }})
+        .then(res => res.json())
+        .then(films => {
+          commit('setFilms', films);
+        });
+    },
+    searchFilms({ commit }, searchTerm){
+      const token = Cookies.get('token');
+      fetch('http://localhost:8000/api/film/search/'.concat(searchTerm), {
+          headers: {
+              'Authorization': `Bearer ${token}`
+          }})
+      .then(res => res.json())
+      .then(films => {
+        commit('setFilms', films);
+      });
+    },
+    fetchArtist({ commit }, id) {
+      const token = Cookies.get('token');
+      return fetch(`http://localhost:8000/api/artist/get/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }})
+        .then(res => res.json())
+        .then(artist => {
+          commit('setArtist', artist);
+        });
+    },
+    fetchArtists({ commit }) {
+      const token = Cookies.get('token');
+      return fetch('http://localhost:8000/api/artist/getAll', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }})
+        .then(res => res.json())
+        .then(artists => {
+          commit('setArtists', artists);
+        });
+    },
+    searchArtists({ commit }, searchTerm){
+      const token = Cookies.get('token');
+        fetch('http://localhost:8000/api/artist/search/'.concat(searchTerm), {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }})
+        .then(res => res.json())
+        .then(artists => {
+          commit('setArtists', artists);
+        });
+    },
+    fetchUser({ commit }) {
+      const token = Cookies.get('token');
+      const decodedToken = jwtDecode(token);
+      return fetch('http://localhost:8000/api/user/get/'.concat(decodedToken.id), {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }})
+        .then(res => res.json())
+        .then(user => {
+          commit('setUser', user);
         });
     },
     register({ commit }, credentials) {
@@ -51,13 +134,14 @@ export default new Vuex.Store({
         if (!res.ok) {
           throw new Error(data.message)
         }
-        commit('SET_USER', data)
+        commit('setUser', data)
       } catch (error) {
-        commit('SET_ERRORS', error)
+        commit('setError', error)
       }
     }
 
   },
   modules: {
   }
+  
 })
