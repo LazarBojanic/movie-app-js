@@ -1,6 +1,17 @@
 <template>
-    <div class="bg-color">
-      <div class="artist-credits container font-gothic">
+  <div class="bg-color">
+    <div class="artist-credits container font-gothic">
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="form-group">
+            <label for="filmListNamePar">New List Name</label>
+            <input type="text" class="form-control" id="filmListNamePar" v-model="filmListNamePar" placeholder="Enter film list name">
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <button class="btn btn-primary" @click="createFilmListButton(filmListNamePar)">Create Film List</button>
+        </div>
+      </div>
       <table class="table table-on-top">
         <thead>
           <tr>
@@ -9,16 +20,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="filmListObject in filmLists" :key="filmListObject.id" @click="clickFilmList(filmListObject)" @mouseover="hoverFilmList(filmListObject)" @mouseout="resetFilmList(filmListObject)" :class="{ 'clicked': filmListObject.clicked }">
+          <tr v-for="filmListObject in this.getFilmLists" :key="filmListObject.id" @click="clickFilmList(filmListObject)" @mouseover="hoverFilmList(filmListObject)" @mouseout="resetFilmList(filmListObject)" :class="{ 'clicked': filmListObject.clicked }">
             <td>{{ filmListObject.filmListName }}</td>
             <td>{{ filmListObject.averageRating }}</td>
           </tr>
         </tbody>
       </table>
     </div>
-    </div>
-    
-  </template>
+  </div>
+</template>
   
   <script>
   import { mapState, mapActions, mapGetters } from 'vuex';
@@ -27,30 +37,23 @@
   export default {
     name: 'FilmLists',
     computed: {
-        ...mapGetters([
-            'getFilmList'
-        ])
+        ...mapGetters([ 'getFilmList' ]),
+        ...mapGetters([ 'getFilmLists' ])
       },
       data(){
         return{
-            filmLists: []
+          filmListNamePar: '',
          }
         },
     mounted() {
       //this.$store.dispatch('fetchArtist', this.$route.params.id);
-      const token = Cookies.get('token');
-      const decodedToken = jwtDecode(token);
-      fetch('http://localhost:8000/api/filmList/getAllByUserId/'.concat(decodedToken.id), {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }})
-        .then(res => res.json())
-        .then(res => {
-            this.filmLists = res;
-        });
+      this.fetchFilmLists(jwtDecode(Cookies.get('token')).id);
+      
     },
     methods:{
         ...mapActions(['fetchFilmList']),
+        ...mapActions(['fetchFilmLists']),
+        ...mapActions(['createFilmList']),
         clickFilmList(filmList){
             this.fetchFilmList(filmList.id).then(() => {
                 //(this.getFilmList.id);
@@ -59,16 +62,25 @@
         },
         clickFilmList(filmList){
             this.fetchFilmList(filmList.id).then(() => {
-                //console.log(this.getFilmList.id);
+                console.log(this.getFilmList.id);
                 this.$router.push({ name: 'filmList', params: { id: this.getFilmList.id } });
                 filmList.clicked = true;
             })
         },
         hoverFilmList(filmList) {
-            filmList.clicked = true;
+            filmList.clicked = false;
         },
         resetFilmList(filmList) {
             filmList.clicked = false;
+        },
+        createFilmListButton(filmListNamePar){
+        const decodedToken = jwtDecode(Cookies.get('token'));
+          const data = {
+            serviceUserId: decodedToken.id,
+            filmListName: filmListNamePar,
+            averageRating: 0
+          }
+          this.createFilmList(data);
         }
     }
   }

@@ -17,6 +17,7 @@
           <artist :artist="artist"></artist>
         </div>
       </div>
+      <br/>
       <nav aria-label="Page navigation example">
         <ul class="pagination">
           <li class="page-item" :class="{'disabled': currentPage === 1}">
@@ -66,9 +67,8 @@
         this.fetchArtists();
     },
     methods: {
-        ...mapActions([
-        'fetchArtists'
-        ]),
+        ...mapActions([ 'fetchArtists' ]),
+        ...mapActions([ 'searchArtists' ]),
       goToPage(page) {
         this.currentPage = page;
       },
@@ -82,8 +82,8 @@
           this.currentPage++;
         }
       },
-      searchArtistsButton(){
-        this.$store.dispatch('searchArtists', this.searchText);
+      async searchArtistsButton(){
+        await this.searchArtists(this.searchText);
       }
     }
   }

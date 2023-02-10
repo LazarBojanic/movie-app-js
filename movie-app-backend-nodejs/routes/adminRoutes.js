@@ -8,9 +8,6 @@ router.use(express.urlencoded({extended: true}));
 const { sequelize, artist, crewMember, film, filmInLibrary, filmInList, filmList, serviceUser } = require('../models');
 const options = {root: path.join(__dirname, '../static')};
 
-router.get('/', (req, res) => {
-res.sendFile('index.html', options);
-});
 router.get('/mainAdmin', (req, res) => {
     res.sendFile('mainAdmin.html', options);
     });

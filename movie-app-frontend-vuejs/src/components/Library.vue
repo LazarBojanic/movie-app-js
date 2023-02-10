@@ -6,6 +6,7 @@
           <FilmInLibrary :filmInLibraryProp="filmInLibrary"></FilmInLibrary>
         </div>
       </div>
+      <br/>
       <nav aria-label="Page navigation example">
         <ul class="pagination">
           <li class="page-item" :class="{'disabled': currentPage === 1}">
@@ -58,16 +59,16 @@
      
       ...mapActions(["fetchFilmsInLibrary"]),
       goToPage(page) {
-        this.currentPage = page
+        this.currentPage = page;
       },
       prevPage() {
         if (this.currentPage > 1) {
-          this.currentPage--
+          this.currentPage--;
         }
       },
       nextPage() {
         if (this.currentPage < this.pages.length) {
-          this.currentPage++
+          this.currentPage++;
         }
       }
     }

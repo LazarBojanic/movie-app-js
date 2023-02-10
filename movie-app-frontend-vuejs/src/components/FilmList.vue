@@ -1,10 +1,21 @@
 <template>
     <div class="container">
+      <div class="col-sm-6 justify-content-center">
+          <div class="form-group">
+            <label for="filmNamePar">Film Name</label>
+            <input type="text" class="form-control" id="filmNamePar" v-model="filmNamePar" placeholder="Enter film name">
+          </div>
+        </div>
+        <br/>
+        <div class="col-sm-6">
+          <button class="btn btn-primary" @click="addFilmToFilmListButtonSocket(filmNamePar)">Add Film to List</button>
+        </div>
       <div class="row">
         <div v-for="filmInList in currentPageFilms" :key="filmInList.film.filmId" class="col-sm-4">
-          <FilmInList :filmInListObject="filmInList"></FilmInList>
+          <FilmInList :filmInListProp="filmInList"></FilmInList>
         </div>
       </div>
+      <br/>
       <nav aria-label="Page navigation example">
         <ul class="pagination">
           <li class="page-item" :class="{'disabled': currentPage === 1}">
@@ -24,7 +35,25 @@
   <script>
   import FilmInList from '@/components/FilmInList.vue'
   import Cookies from 'js-cookie'
+  import jwtDecode from 'jwt-decode';
+  import io from 'socket.io-client';
+  import Joi from 'joi-browser';
   import { mapState, mapActions, mapGetters } from "vuex";
+  import store from '../store/index';
+
+      const token = Cookies.get('token');
+      let socket = io('http://localhost:8000', {
+          query: {
+              authorization: `Bearer ${token}`
+          }
+      });
+      socket.connect();
+      socket.on("filmAdded", filmsInList => {
+        console.log('yoyoyoyoyo' + filmsInList);
+        store.commit('setFilmsInList', filmsInList);
+      });
+
+
   export default {
     name: 'FilmList',
     components: {
@@ -34,6 +63,7 @@
       return {
         currentPage: 1,
         filmsPerPage: 20,
+        filmNamePar: ''
       }
     },
     props:{
@@ -41,6 +71,8 @@
     computed: {
         ...mapGetters([ 'getFilmsInList' ]),
         ...mapGetters([ 'getFilmInList' ]),
+        ...mapGetters([ 'getFilms' ]),
+        ...mapGetters([ 'getFilmList' ]),
       currentPageFilms() {
         const start = (this.currentPage - 1) * this.filmsPerPage;
         return Object.values(this.getFilmsInList).slice(start, start + this.filmsPerPage);
@@ -56,18 +88,61 @@
     },
     methods: {
       ...mapActions(["fetchFilmsInList"]),
+      ...mapActions(["addFilmToFilmList"]),
+      ...mapActions(["addFilmToFilmListSocket"]),
+      ...mapActions(["addFilmToLibrary"]),
+      ...mapActions(["searchFilms"]),
       goToPage(page) {
-        this.currentPage = page
+        this.currentPage = page;
       },
       prevPage() {
         if (this.currentPage > 1) {
-          this.currentPage--
+          this.currentPage--;
         }
       },
       nextPage() {
         if (this.currentPage < this.pages.length) {
-          this.currentPage++
+          this.currentPage++;
         }
+      },
+      async addFilmToFilmListButton(filmNamePar){
+        await this.searchFilms(filmNamePar);
+        const firstFilm = this.getFilms[0];
+          console.log(firstFilm);
+          const filmListData = {
+            filmListId: this.getFilmList.id,
+            filmId: firstFilm.id
+          }
+          this.addFilmToFilmList(filmListData).then(() =>{
+            const filmLibraryData = {
+              serviceUserId: jwtDecode(Cookies.get('token')).id,
+              filmId: this.getFilms[0].id
+            }
+            this.addFilmToLibrary(filmLibraryData).then(() => {
+              console.log('added film to library');
+            });
+            console.log('added film to list');
+          })
+      },
+      async addFilmToFilmListButtonSocket(filmNamePar){
+        await this.searchFilms(filmNamePar);
+        const firstFilm = this.getFilms[0];
+          console.log(firstFilm);
+          const filmListData = {
+            filmListId: this.getFilmList.id,
+            filmId: firstFilm.id
+          }
+          
+          socket.emit("addFilmToFilmList", filmListData);
+          const filmLibraryData = {
+            serviceUserId: jwtDecode(Cookies.get('token')).id,
+            filmId: this.getFilms[0].id
+          }
+          this.addFilmToLibrary(filmLibraryData).then(() => {
+            console.log('added film to library');
+          });
+          console.log('added film to list');
+          
       }
     }
   }

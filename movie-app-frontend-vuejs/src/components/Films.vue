@@ -17,6 +17,7 @@
         <film :film="film"></film>
       </div>
     </div>
+    <br/>
     <nav aria-label="Page navigation example">
       <ul class="pagination">
         <li class="page-item" :class="{'disabled': currentPage === 1}">
@@ -51,9 +52,7 @@ export default {
     }
   },
   computed: {
-      ...mapGetters([
-      'getFilms'
-    ]),
+      ...mapGetters([ 'getFilms' ]),
     currentPageFilms() {
       const start = (this.currentPage - 1) * this.filmsPerPage;
       return Object.values(this.getFilms).slice(start, start + this.filmsPerPage);
@@ -69,6 +68,7 @@ export default {
   },
   methods: {
     ...mapActions(["fetchFilms"]),
+    ...mapActions(["searchFilms"]),
     goToPage(page) {
       this.currentPage = page
     },
@@ -82,8 +82,10 @@ export default {
         this.currentPage++
       }
     },
-    searchFilmsButton(){
-      this.$store.dispatch('searchFilms', this.searchText);
+    async searchFilmsButton(){
+      await this.searchFilms(this.searchText);
+      console.log(this.getFilms);
+      //this.$store.dispatch('searchFilms', this.searchText);
     }
   }
 }

@@ -1,7 +1,9 @@
 <template>
     <div class="artist" @click="navigateToArtistDetailPage" @mousedown="clicked = true" @mouseup="clicked = false" :class="{'clicked': clicked }">      
+      <br/>
       <img v-if="artist.imageUrl" :src=artistImageUrl />
       <p v-else>Image not available</p>  
+      <br/>
       <ul>
         <li>{{ artist.artistName }}</li>
       </ul>
@@ -48,10 +50,15 @@
       font-size: 2em; /* increase the font size */
       color: rgb(64, 212, 238); /* change the text color */
       font-weight: bold;
-      text-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1;
+      text-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1, 2px 2px #17009c, 3px 3px #02008b, 4px 4px #001ea1;
+      box-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1, 2px 2px #17009c, 3px 3px #02008b, 4px 4px #001ea1;
       width: 15vw;
       height: 17vw;
       font-family: 'Century Gothic', sans-serif;
+      background-color: rgb(85, 120, 133);
+    }
+    img{
+      box-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1, 2px 2px #17009c, 3px 3px #02008b, 4px 4px #001ea1;
     }
 
      /* Add styles for mouse hover */

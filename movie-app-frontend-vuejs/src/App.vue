@@ -25,18 +25,24 @@
             <router-link class="nav-link" to="/register">Register</router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#" @click.prevent="logout">Logout</a>
+            <a class="nav-link" href="#" @click.prevent="logoutButton">Logout</a>
           </li>
 
         </ul>
+        
       </div>
     </nav>
-    <router-view/>
+    <body>
+      <router-view/>
+    </body>
+    
   </div>
 </template>
 
 <script>
+import { mapState, mapActions, mapGetters } from 'vuex';
 import Cookies from 'js-cookie'
+import jwtDecode from 'jwt-decode';
 import router from './router';
 export default {
    data() {
@@ -46,10 +52,14 @@ export default {
    },
    
     methods:{
-      logout(){
-        Cookies.remove('token');
-        router.push({name: 'login'});
-      }
+      logoutButton(){
+        /*Cookies.remove('token');
+        router.push({name: 'login'});*/
+        this.logout().then(() => {
+          router.push({name: 'login'});
+        })
+      },
+      ...mapActions(["logout"])
     }
 }
 </script>
@@ -68,9 +78,7 @@ export default {
   margin-top: 10px !important;
   /*background-image: url('@/assets/background.jpg');
   background-size: cover;*/
-  background-color: #2c3e50;
-  width: 100% !important;
-  height: 100% !important;
+
 }
 
 
@@ -86,6 +94,14 @@ export default {
 
 #nav a.router-link-exact-active{
   color: #42b983;
+}
+body{
+  background-color: #2c3e50 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100%;
+  background-repeat: repeat;
+  background-size: auto;
 }
 
 </style>

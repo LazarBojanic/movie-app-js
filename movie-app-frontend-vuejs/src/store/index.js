@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Cookies from 'js-cookie'
-import jwtDecode from 'jwt-decode'
+import jwtDecode from 'jwt-decode';
+import io from 'socket.io-client';
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -10,25 +11,37 @@ export default new Vuex.Store({
     films: {},
     artist: {},
     artists: {},
+    artistCredits: {},
     user: null,
     errors: {},
     filmInLibrary: {},
     filmsInLibrary: {},
+    filmLists: {},
     filmList: {},
     filmInList: {},
-    filmsInList: {}
+    filmsInList: {},
+    studio: {},
+    genre: {},
+    country: {},
+    crewMembers: {}
   },
   getters: {
     getFilm: state => state.film,
     getFilms: state => state.films,
     getArtist: state => state.artist,
     getArtists: state => state.artists,
+    getArtistCredits: state => state.artistCredits,
     getUser: state => state.user,
     getFilmInLibrary: state => state.filmInLibrary,
     getFilmsInLibrary: state => state.filmsInLibrary,
+    getFilmLists: state => state.filmLists,
     getFilmList: state => state.filmList,
     getFilmInList: state => state.filmInList,
-    getFilmsInList: state => state.filmsInList
+    getFilmsInList: state => state.filmsInList,
+    getStudio: state => state.studio,
+    getGenre: state => state.genre,
+    getCountry: state => state.country,
+    getCrewMembers: state => state.crewMembers
   },
   mutations: {
     setArtist(state, artist) {
@@ -36,6 +49,9 @@ export default new Vuex.Store({
     },
     setArtists(state, artists) {
       state.artists = artists;
+    },
+    setArtistCredits(state, artistCredits) {
+      state.artistCredits = artistCredits;
     },
     setFilm(state, film) {
       state.film = film;
@@ -53,6 +69,9 @@ export default new Vuex.Store({
     setFilmsInLibrary: (state, filmsInLibrary) => {
       state.filmsInLibrary = filmsInLibrary;
     },
+    setFilmLists: (state, filmLists) => {
+      state.filmLists = filmLists;
+    },
     setFilmList: (state, filmList) => {
       state.filmList = filmList;
     },
@@ -61,6 +80,18 @@ export default new Vuex.Store({
     },
     setFilmsInList: (state, filmsInList) => {
       state.filmsInList = filmsInList;
+    },
+    setStudio: (state, studio) => {
+      state.studio = studio;
+    },
+    setGenre: (state, genre) => {
+      state.genre = genre;
+    },
+    setCountry: (state, country) => {
+      state.country = country;
+    },
+    setCrewMembers: (state, crewMembers) => {
+      state.crewMembers = crewMembers;
     },
     setErrors: (state, errors) => {
       state.errors = errors;
@@ -89,16 +120,13 @@ export default new Vuex.Store({
           commit('setFilms', films);
         });
     },
-    searchFilms({ commit }, searchTerm){
+    async searchFilms({ commit }, searchTerm){
       const token = Cookies.get('token');
-      fetch('http://localhost:8000/api/film/search/'.concat(searchTerm), {
+      const res = await fetch('http://localhost:8000/api/film/search/'.concat(searchTerm), {
           headers: {
               'Authorization': `Bearer ${token}`
-          }})
-      .then(res => res.json())
-      .then(films => {
-        commit('setFilms', films);
-      });
+          }});
+          commit('setFilms', await res.json());
     },
     fetchArtist({ commit }, id) {
       const token = Cookies.get('token');
@@ -122,16 +150,13 @@ export default new Vuex.Store({
           commit('setArtists', artists);
         });
     },
-    searchArtists({ commit }, searchTerm){
+    async searchArtists({ commit }, searchTerm){
       const token = Cookies.get('token');
-        fetch('http://localhost:8000/api/artist/search/'.concat(searchTerm), {
+        const res = await fetch('http://localhost:8000/api/artist/search/'.concat(searchTerm), {
             headers: {
                 'Authorization': `Bearer ${token}`
-            }})
-        .then(res => res.json())
-        .then(artists => {
-          commit('setArtists', artists);
-        });
+            }});
+            commit('setArtists', await res.json());
     },
     fetchUser({ commit }) {
       const token = Cookies.get('token');
@@ -148,12 +173,13 @@ export default new Vuex.Store({
     fetchFilmInLibrary({ commit }, {userId, filmId} ) {
       const token = Cookies.get('token');
       console.log(userId + ' ' + filmId);
-      return fetch(`http://localhost:8000/api/filmInLibrary/getByUserIdAndFilmIdJoined/${userId}/${filmId}`, {
+      return fetch(`http://localhost:8000/api/filmInLibrary/getByUserIdAndFilmId/${userId}/${filmId}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
         .then(res => res.json())
         .then(filmInLibrary => {
+          //console.log('setting film in library' + filmInLibrary.id);
           commit('setFilmInLibrary', filmInLibrary);
         });
     },
@@ -169,6 +195,17 @@ export default new Vuex.Store({
           commit('setFilmsInLibrary', filmsInLibrary);
         });
     },
+    fetchFilmLists({ commit }, userId){
+      const token = Cookies.get('token');
+      fetch('http://localhost:8000/api/filmList/getAllByUserId/'.concat(userId), {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }})
+        .then(res => res.json())
+        .then(filmLists => {
+          commit('setFilmLists', filmLists);
+        });
+    },
     fetchFilmList({ commit }, id) {
       const token = Cookies.get('token');
       return fetch('http://localhost:8000/api/filmList/get/'.concat(id), {
@@ -179,6 +216,18 @@ export default new Vuex.Store({
         .then(filmList => {
           commit('setFilmList', filmList);
         });
+    },
+    createFilmList({ commit }, data) {
+      const token = Cookies.get('token');
+      return fetch('http://localhost:8000/api/filmList/create', {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+        })
+        .then(res => res.json());
     },
     fetchFilmInList({ commit }, {filmListId, filmId}) {
       const token = Cookies.get('token');
@@ -202,6 +251,92 @@ export default new Vuex.Store({
           commit('setFilmsInList', filmsInList);
         });
     },
+    addFilmToFilmList({ commit }, data) {
+      const token = Cookies.get('token');
+      return fetch('http://localhost:8000/api/filmInList/create', {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data)})
+        .then(res => res.json());
+    },
+    fetchCrewMembersForFilm({commit}, id){
+      const token = Cookies.get('token');
+      fetch('http://localhost:8000/api/crewMember/getAllByFilmId/'.concat(id), {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }})
+        .then(res => res.json())
+        .then(crewMembers => {
+          commit('setCrewMembers', crewMembers);
+      });
+    },
+    fetchStudioForFilm({ commit }, id){
+      const token = Cookies.get('token');
+      return fetch('http://localhost:8000/api/studio/get/'.concat(id), {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }})
+        .then(res => res.json())
+        .then(studio => {
+          commit('setStudio', studio);
+        });
+    },
+    fetchGenreForFilm({ commit }, id){
+      const token = Cookies.get('token');
+      return fetch('http://localhost:8000/api/genre/get/'.concat(id), {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }})
+        .then(res => res.json())
+        .then(genre => {
+          commit('setGenre', genre);
+        });
+    },
+    fetchCountryForFilm({ commit }, id){
+      const token = Cookies.get('token');
+      return fetch('http://localhost:8000/api/country/get/'.concat(id), {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }})
+        .then(res => res.json())
+        .then(country => {
+          commit('setCountry', country);
+        });
+    },
+    submitReview({ commit }, data) {
+      const token = Cookies.get('token');
+      return fetch('http://localhost:8000/api/filmInLibrary/update/'.concat(data.id), {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+      })
+        .then(res => res.json())
+        .then(filmInLibrary => {
+          commit('setFilmInLibrary', filmInLibrary);
+        });
+    },
+    addFilmToLibrary({ commit }, data) {
+      const token = Cookies.get('token');
+      return fetch('http://localhost:8000/api/filmInLibrary/add', {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+      })
+        .then(res => res.json())
+        .then(filmInLibrary => {
+          commit('setFilmInLibrary', filmInLibrary);
+        });
+    },
+
     register({ commit }, credentials) {
       //console.log(credentials);
       try {
@@ -220,6 +355,56 @@ export default new Vuex.Store({
       } catch (error) {
         commit('setError', error)
       }
+    },
+    logout({ commit }) {
+      
+      return fetch('http://localhost:8500/auth/logout', {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then(res => res.json())
+      .then(tokenObj => {
+        console.log(tokenObj.token);
+        Cookies.set('token', tokenObj.token);
+      });
+    },
+    removeFilmFromLibrary({ commit }, id) {
+      const token = Cookies.get('token');
+      return fetch('http://localhost:8000/api/filmInLibrary/delete/'.concat(id), {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(res => res.json());
+    },
+    removeFilmFromFilmList({ commit }, id) {
+      const token = Cookies.get('token');
+      return fetch('http://localhost:8000/api/filmInList/delete/'.concat(id), {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(res => res.json());
+    },
+    fetchArtistCredits({commit}, id){
+      const token = Cookies.get('token');
+      fetch('http://localhost:8000/api/crewMember/getAllByArtistId/'.concat(id), {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }})
+        .then(res => res.json())
+        .then(artistCredits => {
+          commit('setArtistCredits', artistCredits);
+        });
+    },
+    addFilmToFilmListSocket({commit}, data){
+      commit('setFilmsInList', data);
     }
 
   },

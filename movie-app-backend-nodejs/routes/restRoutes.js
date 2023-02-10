@@ -1,21 +1,18 @@
 const express = require('express');
-const router = express.Router();
-const cors = require('cors');
+
 const bcrypt = require('bcrypt');
 const jwt_decode = require('jwt-decode');
-router.use(cors());
+const router = express.Router();
 router.use(express.json());
 router.use(express.urlencoded({extended: true}));
+
 const { artist, crewMember, film, filmInLibrary, filmInList, filmList, serviceUser, studio, genre, country } = require('../models');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const joi = require('joi');
 
-
-
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
-
 
 function authToken(req, res, next) {
   const nonSecurePaths = ['/user/login', '/user/register'];
@@ -32,7 +29,8 @@ function authToken(req, res, next) {
   //console.log(token);
   const decodedToken = jwt_decode(token);
   console.log(decodedToken.userRole);
-  if(decodedToken.userRole == 'admin' || decodedToken.userRole == 'moderator' || decodedToken.userRole == 'client'){
+  console.log('heyyyyyy ' + req.path);
+  if(decodedToken.userRole == 'admin' || decodedToken.userRole == 'moderator' || decodedToken.userRole == 'client' || decodedToken.userRole == 'guest'){
     const moderatorForbiddenRoutes = ['/user/create', '/user/update', '/user/delete'];
     if (moderatorForbiddenRoutes.includes(req.path)){
       if(decodedToken.userRole == 'moderator'){
@@ -50,6 +48,20 @@ function authToken(req, res, next) {
         return res.status(401).json({ msg: 'Not authenticated' });
       }
     }
+    const guestForbiddenRoutes = ['/artist/create', '/artist/update', '/artist/delete',
+                                   '/country/create', '/country/update', '/country/delete',
+                                   '/crewMember/create', '/crewMember/update', '/crewMember/delete',
+                                   '/film/create', '/film/update', '/film/delete', 
+                                   '/genre/create', '/genre/update', '/genre/delete',
+                                   '/studio/create', '/studio/update', '/studio/delete',
+                                   '/filmInLibrary/create', '/filmInLibrary/update', '/filmInLibrary/delete',
+                                   '/filmList/create', '/filmList/update', '/filmList/delete',
+                                   '/filmInList/create', '/filmInList/update', '/filmInList/delete'];
+    if (guestForbiddenRoutes.includes(req.path)){
+      if(decodedToken.userRole == 'guest'){
+        return res.status(401).json({ msg: 'Not authenticated' });
+      }
+    }
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, serviceUser) => {
     
         if (err) return res.status(403).json({ msg: err });
@@ -60,6 +72,9 @@ function authToken(req, res, next) {
     });
   }
 }
+
+
+
 
 router.use(authToken);
 
@@ -733,7 +748,9 @@ router.delete('/film/delete/:id', (req, res) => {
 
 
 router.get('/filmInLibrary/getAll', (req, res) => {
-  filmInLibrary.findAll()
+  filmInLibrary.findAll({attributes:['id', 'serviceUserId', 'filmId', 'watched', 'liked', 'reviewed', 'review']
+
+  })
       .then( rows => res.json(rows))
       .catch( err => res.status(500).json(err));
 });
@@ -756,7 +773,7 @@ router.get('/filmInLibrary/get/:id', (req, res) => {
   }
 });
 
-router.get('/filmInLibrary/getByUserIdAndFilmIdJoined/:userId/:filmId', (req, res) => {
+router.get('/filmInLibrary/getByUserIdAndFilmId/:userId/:filmId', (req, res) => {
   console.log('getting film in library');
   const schema = joi.object({
     userId: joi.number().required(),
@@ -773,7 +790,7 @@ router.get('/filmInLibrary/getByUserIdAndFilmIdJoined/:userId/:filmId', (req, re
   }
   else{
     filmInLibrary.findOne({
-      attributes:['liked', 'watched', 'reviewed', 'review'],
+      attributes:['id', 'liked', 'watched', 'reviewed', 'review'],
       include: [
         {
           model: serviceUser,
@@ -808,7 +825,7 @@ router.get('/filmInLibrary/getAllByUserId/:userId', (req, res) => {
   }
   else{
     filmInLibrary.findAll({
-      attributes:['liked', 'watched', 'reviewed', 'review'],
+      attributes:['id', 'liked', 'watched', 'reviewed', 'review'],
       include: [
         {
           model: serviceUser,
@@ -830,6 +847,7 @@ router.get('/filmInLibrary/getAllByUserId/:userId', (req, res) => {
 router.post('/filmInLibrary/create', (req, res) => {
   console.log('creating film in library')
   const schema = joi.object({
+    id: joi.number().required(),
     filmId: joi.number().required(),
     serviceUserId: joi.number().required(),
     liked: joi.string().required(),
@@ -838,6 +856,7 @@ router.post('/filmInLibrary/create', (req, res) => {
     review: joi.string().allow(null, '')
   });
   const {error, value} = schema.validate({
+    id: req.params.id,
     filmId: req.body.filmId,
     serviceUserId: req.body.serviceUserId,
     liked: req.body.liked,
@@ -857,16 +876,40 @@ router.post('/filmInLibrary/create', (req, res) => {
   }
 });
 
+router.post('/filmInLibrary/add', (req, res) => {
+  console.log('creating film in library')
+  const schema = joi.object({
+    serviceUserId: joi.number().required(),
+    filmId: joi.number().required()
+    
+  });
+  const {error, value} = schema.validate({
+    serviceUserId: req.body.serviceUserId,
+    filmId: req.body.filmId
+    
+  });
+
+  if(error){
+    msg = error;
+    res.status(400).json({msg: msg});
+  }
+  else{
+    filmInLibrary.create({filmId: req.body.filmId, serviceUserId: req.body.serviceUserId, liked: 'No', watched: 'No', reviewed: 'No', review: ''})
+    .then( rows => res.json(rows))
+    .catch( err => res.status(500).json(err));
+  }
+});
+
 router.put('/filmInLibrary/update/:id', (req, res) => {
-  console.log('creatingFilmInLibrary');
+  console.log('updating');
   const schema = joi.object({
     id: joi.number().required(),
-    filmId: joi.number().allow(null),
-    serviceUserId: joi.number().allow(null),
+    filmId: joi.number().required(),
+    serviceUserId: joi.number().required(),
     liked: joi.string().allow(null),
     watched: joi.string().allow(null),
     reviewed: joi.string().allow(null),
-    review: joi.string().allow(null)
+    review: joi.string().allow(null, '')
   });
   const {error, value} = schema.validate({
     id: req.params.id,
@@ -879,6 +922,7 @@ router.put('/filmInLibrary/update/:id', (req, res) => {
   });
 
   if(error){
+    console.log(value);
     msg = error;
     res.status(400).json({msg: msg});
   }
@@ -889,8 +933,8 @@ router.put('/filmInLibrary/update/:id', (req, res) => {
         fieldsToUpdate[key] = value;
       }
     });
-
-    filmInLibrary.update(fieldsToUpdate, { where: { id: req.params.id } })
+    console.log(req.body);
+    filmInLibrary.update(fieldsToUpdate, { where: { id: req.params.id }, returning: true })
     .then(count => {
         console.log('Rows updated ' + count);
     })
@@ -899,6 +943,7 @@ router.put('/filmInLibrary/update/:id', (req, res) => {
 }
 });
 router.delete('/filmInLibrary/delete/:id', (req, res) => {
+  console.log('deleting');
   const schema = joi.object({
     id: joi.number().required()
   });
@@ -907,6 +952,7 @@ router.delete('/filmInLibrary/delete/:id', (req, res) => {
   });
 
   if(error){
+    console.log('validation error')
     msg = error;
     res.status(400).json({msg: msg});
   }
@@ -1147,8 +1193,8 @@ router.post('/filmList/create', (req, res) => {
   const schema = joi.object({
     serviceUserId: joi.number().required(),
     filmListName: joi.string().required(),
-    averageRating: joi.number().allow(null, '')
-  });false
+    averageRating: joi.number().allow(null)
+  });
   const {error, value} = schema.validate({
     serviceUserId: req.body.serviceUserId,
     filmListName: req.body.filmListName,

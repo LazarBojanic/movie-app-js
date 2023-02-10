@@ -3,11 +3,12 @@
       <h2>{{ this.getFilm.title }}</h2>
       <img v-if="this.getFilm.imageUrl" :src="filmImageUrl" />
       <p v-else>Image not available</p>
-      <ul>
-        <li>Rating: {{ this.getFilm.rating }}</li>
-        <li>Release Year: {{ this.getFilm.releaseYear }}</li>
-      </ul>
+      <h3>Rating: {{ this.getFilm.rating }}</h3>
+      <h3>Year: {{ this.getFilm.releaseYear }}</h3>
       <p>{{ this.getFilm.synopsis }}</p>
+      <h3>Studio: {{ this.getStudio.studioName }}</h3>
+      <h3>Genre: {{ this.getGenre.genreName }}</h3>
+      <h3>Country: {{ this.getCountry.countryName }}</h3>
       <table class="table table-on-top">
       <thead>
         <tr>
@@ -16,7 +17,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="crewMember in crewMembers" :key="crewMember.artist.artistId">
+        <tr v-for="crewMember in this.getCrewMembers" :key="crewMember.artist.artistId">
           <td>{{ crewMember.artist.artistName }}</td>
           <td>{{ crewMember.crewMemberRole }}</td>
         </tr>
@@ -26,7 +27,7 @@
   </template>
   
   <script>
-  import { mapState, mapActions, mapGetters } from 'vuex';
+  import { mapState, mapActions, mapGetters, mapMutations } from 'vuex';
   import Cookies from 'js-cookie'
   
   export default {
@@ -34,14 +35,15 @@
     
     data(){
       return{
-        crewMembers: []
       }
     },
 
     computed: {
-      ...mapGetters([
-            'getFilm'
-        ]),
+      ...mapGetters([ 'getFilm' ]),
+      ...mapGetters([ 'getStudio' ]),
+      ...mapGetters([ 'getGenre' ]),
+      ...mapGetters([ 'getCountry' ]),
+      ...mapGetters([ 'getCrewMembers' ]),
       filmImageUrl() {
         return 'https://image.tmdb.org/t/p/w154' + this.getFilm.imageUrl;
       }
@@ -50,30 +52,21 @@
       getFilm: {
         immediate: true,
         handler() {
-          const token = Cookies.get('token');
-          //console.log(this.getFilm.id);
-          fetch('http://localhost:8000/api/crewMember/getAllByFilmId/'.concat(this.getFilm.id), {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }})
-            .then(res => res.json())
-            .then(res => {
-                this.crewMembers = res;
-          });
+          this.fetchCrewMembersForFilm(this.getFilm.id);
+          this.fetchStudioForFilm(this.getFilm.studioId);
+          this.fetchGenreForFilm(this.getFilm.genreId);
+          this.fetchCountryForFilm(this.getFilm.countryId);
         }
       }
     },
+    methods:{
+      ...mapActions(['fetchStudioForFilm']),
+      ...mapActions(['fetchGenreForFilm']),
+      ...mapActions(['fetchCountryForFilm']),
+      ...mapActions(['fetchCrewMembersForFilm']),
+    },
     mounted() {
-      //this.$store.dispatch('fetchFilm', this.$route.params.id);
-      /*const token = Cookies.get('token');
-      fetch('http://localhost:8000/api/crewMember/getAllByFilmId/'.concat(this.getFilm.id), {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }})
-        .then(res => res.json())
-        .then(res => {
-            this.crewMembers = res;
-      });*/
+
     }
   }
   </script>
@@ -90,9 +83,17 @@
       color: rgb(64, 212, 238); / change the text color */
       font-weight: bold;
       text-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1, 2px 2px #17009c, 3px 3px #02008b, 4px 4px #001ea1;
+      box-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1, 2px 2px #17009c, 3px 3px #02008b, 4px 4px #001ea1;
+
       font-family: 'Century Gothic', sans-serif;
+    }
+    img{
+      box-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1, 2px 2px #17009c, 3px 3px #02008b, 4px 4px #001ea1;
     }
     tbody{
       color: rgb(226, 100, 216) !important;
+    }
+    thead{
+      color: rgb(68, 0, 255) !important;
     }
   </style>

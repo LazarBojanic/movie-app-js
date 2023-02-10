@@ -14,7 +14,10 @@
                 <label>Pass:</label>
                 <input class="form-control" type="password" v-model="pass" />
               </div>
+              <br/>
               <button class="btn btn-primary" type="submit">Login</button>
+              <br/>
+              <div v-if="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
             </form>
           </div>
         </div>
@@ -25,30 +28,48 @@
 
 <script>
 import Cookies from 'js-cookie'
-
+import Joi from 'joi-browser'
 export default {
   data() {
     return {
       email: "",
       pass: "",
+      errorMessage: ""
     };
   },
   methods: {
     async submitForm() {
+
+      const loginData = {
+          email: this.email,
+          pass: this.pass,
+         }
+
+
+        const schema = Joi.object({
+          email: Joi.string().required(),
+          pass: Joi.string().required()
+        });
+        const { error } = schema.validate({email: loginData.email, pass: loginData.pass});
+        if (error) {
+          this.errorMessage = error.details[0].message;
+          setTimeout(() => {
+            this.errorMessage = '';
+          }, 3000);
+          return;
+        }
+
       const res = await fetch("http://localhost:8500/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: this.email,
-          pass: this.pass,
-        }),
+        body: JSON.stringify(loginData),
       });
       const data = await res.json();
       if (data.token) {
         Cookies.set('token', data.token);
-        this.$router.push({ name: 'browseFilms' });
+        this.$router.push({ name: 'home' });
       }
     },
   },

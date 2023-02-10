@@ -22,7 +22,10 @@
                         <input type="password" v-model="pass" class="form-control" required />
                             <div class="invalid-feedback" v-if="errors.pass">{{ errors.pass }}</div>
                     </div>
+                    <br/>
                         <button type="submit" class="btn btn-primary">Register</button>
+                        <br/>
+                        <div v-if="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
                 </form>
             </div>
           </div>
@@ -44,43 +47,42 @@
         email: '',
         username: '',
         pass: '',
-        errors: {}
+        errors: {},
+        errorMessage: ""
       }
     },
     methods: {
       register() {
+
+        const registerData = {
+          email: this.email,
+          username: this.username,
+          pass: this.pass,
+          userRole: 'client'
+        }
+
         const schema = Joi.object({
           email: Joi.string().required(),
           username: Joi.string().required(),
-          pass: Joi.string().required()
+          pass: Joi.string().required().min(5)
         })
   
-        const validation = schema.validate({
-          email: this.email,
-          username: this.username,
-          pass: this.pass
-        })
+        const { error }  = schema.validate({ email: registerData.email, username: registerData.username, pass: registerData.pass})
   
-        if (validation.error) {
-          this.errors = validation.error.details.reduce((errors, error) => {
-            errors[error.path[0]] = error.message
-            return errors
-          }, {})
-          return
+        if (error) {
+          this.errorMessage = error.details[0].message;
+          setTimeout(() => {
+            this.errorMessage = '';
+          }, 3000);
+          return;
         }
-  
-        // Send a POST request to the server with the user's email, username, and password
+
         fetch('http://localhost:8500/auth/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({
-            email: this.email,
-            username: this.username,
-            pass: this.pass,
-            userRole: 'client'
-          })
+          body: JSON.stringify(registerData)
         })
           .then(res => res.json())
           .then(res => {

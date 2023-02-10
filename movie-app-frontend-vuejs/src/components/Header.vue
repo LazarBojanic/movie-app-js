@@ -20,7 +20,7 @@ export default {
   h1{
     color:rgb(154, 58, 218);
     font-weight: bold;
-    text-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1;
+    text-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1, 2px 2px #17009c, 3px 3px #02008b, 4px 4px #001ea1;
     font-family: 'Century Gothic', sans-serif;
   }
 </style>

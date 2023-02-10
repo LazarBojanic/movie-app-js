@@ -12,6 +12,7 @@ import BrowseArtistsView from '../views/BrowseArtistsView.vue'
 import ArtistCreditsView from '../views/ArtistCreditsView.vue'
 import UserProfileView from '../views/UserProfileView.vue'
 import FilmListView from '../views/FilmListView.vue'
+import PersonalFilmView from '../views/PersonalFilmView.vue'
 
 Vue.use(VueRouter)
 
@@ -70,6 +71,11 @@ const routes = [
     path: '/filmList',
     name: 'filmList',
     component: FilmListView
+  },
+  {
+    path: '/personalFilm',
+    name: 'personalFilm',
+    component: PersonalFilmView
   }
 ]
 

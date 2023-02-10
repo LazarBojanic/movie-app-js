@@ -3,8 +3,11 @@
     <div class="artist-credits container font-gothic">
     <h2>{{ getArtist.artistName }}</h2>
     <img v-if="getArtist.imageUrl" :src="artistImageUrl" />
+    
     <p v-else>Image not available</p>
-    <table class="table table-striped table-on-top">
+    <br/>
+    <br/>
+    <table class="table table-on-top">
       <thead>
         <tr>
           <th>Film Title</th>
@@ -13,7 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="credit in artistCredits" :key="credit.film.filmId">
+        <tr v-for="credit in this.getArtistCredits" :key="credit.film.filmId">
           <td>{{ credit.film.title }}</td>
           <td>{{ credit.film.releaseYear }}</td>
           <td>{{ credit.crewMemberRole }}</td>
@@ -31,35 +34,21 @@ import Cookies from 'js-cookie'
 export default {
   name: 'ArtistCredits',
   computed: {
-      ...mapGetters([
-          'getArtist'
-      ]),
+      ...mapGetters([ 'getArtist' ]),
+      ...mapGetters([ 'getArtistCredits' ]),
       artistImageUrl() {
           return 'https://image.tmdb.org/t/p/w154' + this.getArtist.imageUrl;
     }
   },
   data(){
       return{
-          artistCredits: []
       }
   },
   mounted() {
-    //this.$store.dispatch('fetchArtist', this.$route.params.id);
-    const token = Cookies.get('token');
-    fetch('http://localhost:8000/api/crewMember/getAllByArtistId/'.concat(this.getArtist.id), {
-      headers: {
-          'Authorization': `Bearer ${token}`
-      }})
-      .then(res => res.json())
-      .then(res => {
-          this.artistCredits = res;
-          this.populateArtistCreditsList();
-      });
+    this.fetchArtistCredits(this.getArtist.id);
   },
   methods:{
-      populateArtistCreditsList(){
-          // Do something
-      }
+    ...mapActions([ 'fetchArtistCredits' ]),
   }
 }
 </script>
@@ -74,9 +63,14 @@ export default {
   font-size: 2em; /* increase the font size */
   color: rgb(64, 212, 238); /* change the text color */
   font-weight: bold;
-  text-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1;
+  text-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1, 2px 2px #17009c, 3px 3px #02008b, 4px 4px #001ea1;
+  box-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1, 2px 2px #17009c, 3px 3px #02008b, 4px 4px #001ea1;
+
   font-family: 'Century Gothic', sans-serif;
 }
+img{
+      box-shadow: -1px -1px 0 #000000, 1px -1px 0 #17009c, -1px 1px 0 #02008b, 1px 1px 0 #001ea1, 2px 2px #17009c, 3px 3px #02008b, 4px 4px #001ea1;
+    }
 td, th {
     padding: 10px;
 }
@@ -91,4 +85,10 @@ table {
     background-color: #2c3e50 !important;
     z-index: 1;
 }
+  tbody{
+      color: rgb(226, 100, 216) !important;
+    }
+    thead{
+      color: rgb(68, 0, 255) !important;
+    }
 </style>
