@@ -1,2 +1,1 @@
-# frontend-vuejs-igor-LBojanic50
-frontend-vuejs-igor-LBojanic50 created by GitHub Classroom
+# A movie web app that lets users log films, review and rate them, browse and search films, actors, directors, see film details and cast and crew, with a user login system. Node.js/Express backend, Vue.js 2 frontend, postgresql database
