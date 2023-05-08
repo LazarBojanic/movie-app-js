@@ -3,7 +3,7 @@
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card">
-          <div class="card-header">Login</div>
+          <div class="card-header">Register</div>
           <div class="card-body">
             <div>
                 <form @submit.prevent="register" class="needs-validation" novalidate>
@@ -77,7 +77,7 @@
           return;
         }
 
-        fetch('http://localhost:8500/auth/register', {
+        fetch('http://95.180.97.206:8500/auth/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

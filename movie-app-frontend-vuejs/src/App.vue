@@ -32,6 +32,7 @@
         
       </div>
     </nav>
+    <br/>
     <body>
       <router-view/>
     </body>

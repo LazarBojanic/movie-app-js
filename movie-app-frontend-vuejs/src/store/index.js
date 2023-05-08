@@ -100,7 +100,7 @@ export default new Vuex.Store({
   actions: {
     fetchFilm({ commit }, id) {
       const token = Cookies.get('token');
-      return fetch(`http://localhost:8000/api/film/get/${id}`, {
+      return fetch(`http://95.180.97.206:8000/api/film/get/${id}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -111,7 +111,7 @@ export default new Vuex.Store({
     },
     fetchFilms({ commit }) {
       const token = Cookies.get('token');
-      return fetch('http://localhost:8000/api/film/getAll', {
+      return fetch('http://95.180.97.206:8000/api/film/getAll', {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -122,7 +122,7 @@ export default new Vuex.Store({
     },
     async searchFilms({ commit }, searchTerm){
       const token = Cookies.get('token');
-      const res = await fetch('http://localhost:8000/api/film/search/'.concat(searchTerm), {
+      const res = await fetch('http://95.180.97.206:8000/api/film/search/'.concat(searchTerm), {
           headers: {
               'Authorization': `Bearer ${token}`
           }});
@@ -130,7 +130,7 @@ export default new Vuex.Store({
     },
     fetchArtist({ commit }, id) {
       const token = Cookies.get('token');
-      return fetch(`http://localhost:8000/api/artist/get/${id}`, {
+      return fetch(`http://95.180.97.206:8000/api/artist/get/${id}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -141,7 +141,7 @@ export default new Vuex.Store({
     },
     fetchArtists({ commit }) {
       const token = Cookies.get('token');
-      return fetch('http://localhost:8000/api/artist/getAll', {
+      return fetch('http://95.180.97.206:8000/api/artist/getAll', {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -152,7 +152,7 @@ export default new Vuex.Store({
     },
     async searchArtists({ commit }, searchTerm){
       const token = Cookies.get('token');
-        const res = await fetch('http://localhost:8000/api/artist/search/'.concat(searchTerm), {
+        const res = await fetch('http://95.180.97.206:8000/api/artist/search/'.concat(searchTerm), {
             headers: {
                 'Authorization': `Bearer ${token}`
             }});
@@ -161,7 +161,7 @@ export default new Vuex.Store({
     fetchUser({ commit }) {
       const token = Cookies.get('token');
       const decodedToken = jwtDecode(token);
-      return fetch('http://localhost:8000/api/user/get/'.concat(decodedToken.id), {
+      return fetch('http://95.180.97.206:8000/api/user/get/'.concat(decodedToken.id), {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -173,7 +173,7 @@ export default new Vuex.Store({
     fetchFilmInLibrary({ commit }, {userId, filmId} ) {
       const token = Cookies.get('token');
       console.log(userId + ' ' + filmId);
-      return fetch(`http://localhost:8000/api/filmInLibrary/getByUserIdAndFilmId/${userId}/${filmId}`, {
+      return fetch(`http://95.180.97.206:8000/api/filmInLibrary/getByUserIdAndFilmId/${userId}/${filmId}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -186,7 +186,7 @@ export default new Vuex.Store({
     fetchFilmsInLibrary({ commit }) {
       const token = Cookies.get('token');
       const decodedToken = jwtDecode(token);
-      return fetch('http://localhost:8000/api/filmInLibrary/getAllByUserId/'.concat(decodedToken.id), {
+      return fetch('http://95.180.97.206:8000/api/filmInLibrary/getAllByUserId/'.concat(decodedToken.id), {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -197,7 +197,7 @@ export default new Vuex.Store({
     },
     fetchFilmLists({ commit }, userId){
       const token = Cookies.get('token');
-      fetch('http://localhost:8000/api/filmList/getAllByUserId/'.concat(userId), {
+      fetch('http://95.180.97.206:8000/api/filmList/getAllByUserId/'.concat(userId), {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -208,7 +208,7 @@ export default new Vuex.Store({
     },
     fetchFilmList({ commit }, id) {
       const token = Cookies.get('token');
-      return fetch('http://localhost:8000/api/filmList/get/'.concat(id), {
+      return fetch('http://95.180.97.206:8000/api/filmList/get/'.concat(id), {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -219,7 +219,7 @@ export default new Vuex.Store({
     },
     createFilmList({ commit }, data) {
       const token = Cookies.get('token');
-      return fetch('http://localhost:8000/api/filmList/create', {
+      return fetch('http://95.180.97.206:8000/api/filmList/create', {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -231,7 +231,7 @@ export default new Vuex.Store({
     },
     fetchFilmInList({ commit }, {filmListId, filmId}) {
       const token = Cookies.get('token');
-      return fetch(`http://localhost:8000/api/filmInList/getByFilmListIdAndFilmId/${filmListId}/${filmId}`, {
+      return fetch(`http://95.180.97.206:8000/api/filmInList/getByFilmListIdAndFilmId/${filmListId}/${filmId}`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -242,7 +242,7 @@ export default new Vuex.Store({
     },
     fetchFilmsInList({ commit }, id) {
       const token = Cookies.get('token');
-      return fetch('http://localhost:8000/api/filmInList/getAllByFilmListId/'.concat(id), {
+      return fetch('http://95.180.97.206:8000/api/filmInList/getAllByFilmListId/'.concat(id), {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -253,7 +253,7 @@ export default new Vuex.Store({
     },
     addFilmToFilmList({ commit }, data) {
       const token = Cookies.get('token');
-      return fetch('http://localhost:8000/api/filmInList/create', {
+      return fetch('http://95.180.97.206:8000/api/filmInList/create', {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -264,7 +264,7 @@ export default new Vuex.Store({
     },
     fetchCrewMembersForFilm({commit}, id){
       const token = Cookies.get('token');
-      fetch('http://localhost:8000/api/crewMember/getAllByFilmId/'.concat(id), {
+      fetch('http://95.180.97.206:8000/api/crewMember/getAllByFilmId/'.concat(id), {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -275,7 +275,7 @@ export default new Vuex.Store({
     },
     fetchStudioForFilm({ commit }, id){
       const token = Cookies.get('token');
-      return fetch('http://localhost:8000/api/studio/get/'.concat(id), {
+      return fetch('http://95.180.97.206:8000/api/studio/get/'.concat(id), {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -286,7 +286,7 @@ export default new Vuex.Store({
     },
     fetchGenreForFilm({ commit }, id){
       const token = Cookies.get('token');
-      return fetch('http://localhost:8000/api/genre/get/'.concat(id), {
+      return fetch('http://95.180.97.206:8000/api/genre/get/'.concat(id), {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -297,7 +297,7 @@ export default new Vuex.Store({
     },
     fetchCountryForFilm({ commit }, id){
       const token = Cookies.get('token');
-      return fetch('http://localhost:8000/api/country/get/'.concat(id), {
+      return fetch('http://95.180.97.206:8000/api/country/get/'.concat(id), {
         headers: {
             'Authorization': `Bearer ${token}`
         }})
@@ -308,7 +308,7 @@ export default new Vuex.Store({
     },
     submitReview({ commit }, data) {
       const token = Cookies.get('token');
-      return fetch('http://localhost:8000/api/filmInLibrary/update/'.concat(data.id), {
+      return fetch('http://95.180.97.206:8000/api/filmInLibrary/update/'.concat(data.id), {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',
@@ -323,7 +323,7 @@ export default new Vuex.Store({
     },
     addFilmToLibrary({ commit }, data) {
       const token = Cookies.get('token');
-      return fetch('http://localhost:8000/api/filmInLibrary/add', {
+      return fetch('http://95.180.97.206:8000/api/filmInLibrary/add', {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -340,7 +340,7 @@ export default new Vuex.Store({
     register({ commit }, credentials) {
       //console.log(credentials);
       try {
-        const res = fetch('http://localhost:8500/auth/register', {
+        const res = fetch('http://95.180.97.206:8500/auth/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -358,7 +358,7 @@ export default new Vuex.Store({
     },
     logout({ commit }) {
       
-      return fetch('http://localhost:8500/auth/logout', {
+      return fetch('http://95.180.97.206:8500/auth/logout', {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -372,7 +372,7 @@ export default new Vuex.Store({
     },
     removeFilmFromLibrary({ commit }, id) {
       const token = Cookies.get('token');
-      return fetch('http://localhost:8000/api/filmInLibrary/delete/'.concat(id), {
+      return fetch('http://95.180.97.206:8000/api/filmInLibrary/delete/'.concat(id), {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -383,7 +383,7 @@ export default new Vuex.Store({
     },
     removeFilmFromFilmList({ commit }, id) {
       const token = Cookies.get('token');
-      return fetch('http://localhost:8000/api/filmInList/delete/'.concat(id), {
+      return fetch('http://95.180.97.206:8000/api/filmInList/delete/'.concat(id), {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -394,7 +394,7 @@ export default new Vuex.Store({
     },
     fetchArtistCredits({commit}, id){
       const token = Cookies.get('token');
-      fetch('http://localhost:8000/api/crewMember/getAllByArtistId/'.concat(id), {
+      fetch('http://95.180.97.206:8000/api/crewMember/getAllByArtistId/'.concat(id), {
         headers: {
             'Authorization': `Bearer ${token}`
         }})

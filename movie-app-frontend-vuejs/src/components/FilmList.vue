@@ -42,7 +42,7 @@
   import store from '../store/index';
 
       const token = Cookies.get('token');
-      let socket = io('http://localhost:8000', {
+      let socket = io('http://95.180.97.206:8000', {
           query: {
               authorization: `Bearer ${token}`
           }

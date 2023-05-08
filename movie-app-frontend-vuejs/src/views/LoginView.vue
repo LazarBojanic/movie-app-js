@@ -59,7 +59,7 @@ export default {
           return;
         }
 
-      const res = await fetch("http://localhost:8500/auth/login", {
+      const res = await fetch("http://95.180.97.206:8500/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

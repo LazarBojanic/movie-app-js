@@ -11,7 +11,7 @@
   
   
   export default {
-    name: 'BrowseFilms',
+    name: 'FilmDetails',
     components: {
       Header,
       FilmDetails

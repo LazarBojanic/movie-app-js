@@ -36,7 +36,7 @@
         ...mapActions(["submitReview"]),
    
       submitReviewButton() {
-        const socket = io('http://localhost:8000');
+        const socket = io('http://95.180.97.206:8000');
         socket.emit('message');
          const data = {
             id: this.getFilmInLibrary.id,
