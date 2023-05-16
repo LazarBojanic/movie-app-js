@@ -69,6 +69,7 @@ export default {
       const data = await res.json();
       if (data.token) {
         Cookies.set('token', data.token);
+        this.$emit('loginSuccess', data.token);
         this.$router.push({ name: 'home' });
       }
     },

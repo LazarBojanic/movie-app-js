@@ -18,23 +18,21 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/userProfile">Profile</router-link>
           </li>
-          <li class="nav-item">
+          <li v-if="this.userRole == 'guest'" class="nav-item">
             <router-link class="nav-link" to="/login">Login</router-link>
           </li>
-          <li class="nav-item">
+          <li v-if="this.userRole == 'guest'" class="nav-item">
             <router-link class="nav-link" to="/register">Register</router-link>
           </li>
-          <li class="nav-item">
+          <li v-if="this.userRole != 'guest'" class="nav-item">
             <a class="nav-link" href="#" @click.prevent="logoutButton">Logout</a>
           </li>
-
         </ul>
-        
       </div>
     </nav>
     <br/>
     <body>
-      <router-view/>
+      <router-view @loginSuccess="updateToken" />
     </body>
     
   </div>
@@ -48,19 +46,29 @@ import router from './router';
 export default {
    data() {
       return {
-         token: Cookies.get('token')
+         token: Cookies.get('token'),
+         userRole: jwtDecode(token).userRole
       }
    },
    
     methods:{
+      ...mapActions(["logout"]),
       logoutButton(){
-        /*Cookies.remove('token');
-        router.push({name: 'login'});*/
         this.logout().then(() => {
+          this.updateToken(Cookies.get('token'));
           router.push({name: 'login'});
         })
       },
-      ...mapActions(["logout"])
+      updateToken(token) {
+        this.token = token;
+        this.userRole = jwtDecode(this.token).userRole
+      }
+    },
+    watch: {
+      token(newToken){
+        this.token = newToken;
+        this.userRole = jwtDecode(this.token).userRole;
+      }
     }
 }
 </script>

@@ -16,7 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="credit in this.getArtistCredits" :key="credit.film.filmId">
+        <tr v-for="credit in getArtistCredits" :key="credit.film.filmId">
           <td>{{ credit.film.title }}</td>
           <td>{{ credit.film.releaseYear }}</td>
           <td>{{ credit.crewMemberRole }}</td>

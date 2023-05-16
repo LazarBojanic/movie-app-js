@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div>
       <Header :title = "title"/>
       <FilmDetails/>
     </div>
@@ -9,9 +9,8 @@
   import Header from '@/components/Header.vue'
   import FilmDetails from '@/components/FilmDetails.vue'
   
-  
   export default {
-    name: 'FilmDetails',
+    name: 'FilmDetailsView',
     components: {
       Header,
       FilmDetails

@@ -1,14 +1,14 @@
 <template>
     <div class="film-detail">
-      <h2>{{ this.getFilm.title }}</h2>
-      <img v-if="this.getFilm.imageUrl" :src="filmImageUrl" />
+      <h2>{{ getFilm.title }}</h2>
+      <img v-if="getFilm.imageUrl" :src="filmImageUrl" />
       <p v-else>Image not available</p>
-      <h3>Rating: {{ this.getFilm.rating }}</h3>
-      <h3>Year: {{ this.getFilm.releaseYear }}</h3>
-      <p>{{ this.getFilm.synopsis }}</p>
-      <h3>Studio: {{ this.getStudio.studioName }}</h3>
-      <h3>Genre: {{ this.getGenre.genreName }}</h3>
-      <h3>Country: {{ this.getCountry.countryName }}</h3>
+      <h3>Rating: {{ getFilm.rating }}</h3>
+      <h3>Year: {{ getFilm.releaseYear }}</h3>
+      <p>{{ getFilm.synopsis }}</p>
+      <h3>Studio: {{ getStudio.studioName }}</h3>
+      <h3>Genre: {{ getGenre.genreName }}</h3>
+      <h3>Country: {{ getCountry.countryName }}</h3>
       <table class="table table-on-top">
       <thead>
         <tr>
@@ -17,7 +17,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="crewMember in this.getCrewMembers" :key="crewMember.artist.artistId">
+        <tr v-for="crewMember in getCrewMembers" :key="crewMember.artist.artistId">
           <td>{{ crewMember.artist.artistName }}</td>
           <td>{{ crewMember.crewMemberRole }}</td>
         </tr>
@@ -48,17 +48,6 @@
         return 'https://image.tmdb.org/t/p/w154' + this.getFilm.imageUrl;
       }
     },
-    watch: {
-      getFilm: {
-        immediate: true,
-        handler() {
-          this.fetchCrewMembersForFilm(this.getFilm.id);
-          this.fetchStudioForFilm(this.getFilm.studioId);
-          this.fetchGenreForFilm(this.getFilm.genreId);
-          this.fetchCountryForFilm(this.getFilm.countryId);
-        }
-      }
-    },
     methods:{
       ...mapActions(['fetchStudioForFilm']),
       ...mapActions(['fetchGenreForFilm']),
@@ -66,7 +55,10 @@
       ...mapActions(['fetchCrewMembersForFilm']),
     },
     mounted() {
-
+          this.fetchCrewMembersForFilm(this.getFilm.id);
+          this.fetchStudioForFilm(this.getFilm.studioId);
+          this.fetchGenreForFilm(this.getFilm.genreId);
+          this.fetchCountryForFilm(this.getFilm.countryId);
     }
   }
   </script>

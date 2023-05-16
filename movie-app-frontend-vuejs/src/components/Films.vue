@@ -45,7 +45,6 @@ export default {
   },
   data() {
     return {
-
       currentPage: 1,
       filmsPerPage: 20,
       searchText: '',

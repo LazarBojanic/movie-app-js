@@ -34,9 +34,11 @@ router.post('/register', (req, res) => {
       console.log(error);
   }
 
-  if(serviceUser.findOne({where: {email: data.email}})){
-    return res.status(409).json({ 'message': 'Email already in use.' });
-  }
+  serviceUser.findOne({where: {email: data.email}}).then(res => {
+    if(res){
+      return res.status(409).json({ 'message': 'Email already in use.' });
+    }
+  });
   try{
     const hashedPass = bcrypt.hashSync(data.pass, 10);
     serviceUser.create({username: data.username, email: data.email, pass: hashedPass, userRole: data.userRole})

@@ -1,3 +1,4 @@
+import createPersistedState from 'vuex-persistedstate';
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Cookies from 'js-cookie'
@@ -357,7 +358,6 @@ export default new Vuex.Store({
       }
     },
     logout({ commit }) {
-      
       return fetch('http://95.180.97.206:8500/auth/logout', {
         method: "GET",
         headers: {
@@ -410,5 +410,5 @@ export default new Vuex.Store({
   },
   modules: {
   }
-  
+  ,plugins: [createPersistedState()]
 })

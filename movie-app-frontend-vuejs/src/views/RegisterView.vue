@@ -89,6 +89,7 @@
             if (res.error) {
               console.error(res.error)
             } else {
+              console.log(registerData);
               console.log('User registered!')
             }})
         .catch(err => console.error(err))

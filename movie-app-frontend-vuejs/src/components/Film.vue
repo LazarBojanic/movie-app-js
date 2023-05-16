@@ -1,23 +1,20 @@
 <template>
     <div>
       <div class="film" @click="navigateToFilmDetailPage" @mousedown="clicked = true" @mouseup="clicked = false" :class="{'clicked': clicked }">
-        
         <h3>{{ film.title }}</h3>
         <br/>
         <img v-if="film.imageUrl" :src=filmImageUrl />
         <p v-else>Image not available</p>
         <h3>Rating: {{ film.rating }}</h3>
-        <h3>Year: {{ film.releaseYear }}</h3>
-        
+        <h3>Year: {{ film.releaseYear }}</h3> 
       </div>
-      
-      
       <button @click="addFilmToLibraryButton" class="btn btn-primary">+</button>
     </div>
   </template>
   
   <script>
   import { mapState, mapActions, mapGetters } from 'vuex';
+
   import Cookies from 'js-cookie';
   import jwtDecode from 'jwt-decode';
     export default {
@@ -39,9 +36,11 @@
       methods: {
         ...mapActions(['fetchFilm']),
         ...mapActions(['addFilmToLibrary']),
+        
         navigateToFilmDetailPage() {
-          this.fetchFilm(this.film.id).then(() => {
-            this.$router.push({ name: 'filmDetails', params: { id: this.film.id } });
+          this.fetchFilm(this.film.id).then(() =>{
+            console.log(this.getFilm.id);
+            this.$router.push('filmDetails');
           });
         },
         addFilmToLibraryButton() {
@@ -53,6 +52,9 @@
             console.log('added film to library');
           });
         }
+      },
+      computed:{
+        ...mapGetters(['getFilm'])
       }
     }
   
