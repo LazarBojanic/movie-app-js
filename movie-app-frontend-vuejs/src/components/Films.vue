@@ -5,7 +5,7 @@
         <ul class="navbar-nav d-flex justify-content-center ms-auto">
           <li class="nav-item">
               <form class="form-inline my-2 my-lg-0 d-flex justify-content-center">
-                  <input class="form-control mr-sm-2" type="search" placeholder="Search films" aria-label="Search" v-model="searchText">
+                  <input class="form-control mr-sm-2" type="search" placeholder="Search films" aria-label="Search" v-model="searchTerm">
                   <button class="btn btn-outline-success my-2 my-sm-0 custom-button" type="submit" @click.prevent="searchFilmsButton">Search</button>
               </form>
           </li>
@@ -47,7 +47,7 @@ export default {
     return {
       currentPage: 1,
       pageSize: 20,
-      searchText: '',
+      searchTerm: '',
     }
   },
   computed: {
@@ -56,32 +56,57 @@ export default {
       return Array.from({ length: Math.ceil(this.getFilms.count / this.pageSize) }, (_, i) => i + 1);
     }
   },
-  mounted() {
-    this.fetchFilms({ pageSize: this.pageSize, pageNumber: this.currentPage });
+  async mounted() {
+    await this.fetchFilms({ pageSize: this.pageSize, pageNumber: this.currentPage });
   },
   methods: {
     ...mapActions(["fetchFilms"]),
     ...mapActions(["searchFilms"]),
-    goToPage(page) {
+    async goToPage(page) {
       this.currentPage = page;
-      this.fetchFilms({ pageSize: this.pageSize, pageNumber: this.currentPage });
+      this.currentPage--
+        if(this.searchTerm){
+        await this.searchFilms({searchTerm: this.searchTerm, 
+          pageSize: this.pageSize,
+          pageNumber: this.currentPage});
+        }
+        else{
+          await this.fetchFilms({ pageSize: this.pageSize, pageNumber: this.currentPage });
+        }
     },
-    prevPage() {
+    async prevPage() {
       if (this.currentPage > 1) {
         this.currentPage--
-        this.fetchFilms({ pageSize: this.pageSize, pageNumber: this.currentPage });
+        if(this.searchTerm){
+        await this.searchFilms({searchTerm: this.searchTerm, 
+          pageSize: this.pageSize,
+          pageNumber: this.currentPage});
+        }
+        else{
+          await this.fetchFilms({ pageSize: this.pageSize, pageNumber: this.currentPage });
+        }
       }
     },
-    nextPage() {
+    async nextPage() {
       if (this.currentPage < this.pages.length) {
         this.currentPage++
-        this.fetchFilms({ pageSize: this.pageSize, pageNumber: this.currentPage });
+        if(this.searchTerm){
+        await this.searchFilms({searchTerm: this.searchTerm, 
+          pageSize: this.pageSize,
+          pageNumber: this.currentPage});
+        }
+        else{
+          await this.fetchFilms({ pageSize: this.pageSize, pageNumber: this.currentPage });
+        }
+        
       }
     },
     async searchFilmsButton(){
-      await this.searchFilms(this.searchText);
-      console.log(this.getFilms);
-      //this.$store.dispatch('searchFilms', this.searchText);
+      this.currentPage = 1;
+      console.log(this.searchTerm);
+      await this.searchFilms({searchTerm: this.searchTerm, 
+          pageSize: this.pageSize,
+          pageNumber: this.currentPage});
     }
   }
 }

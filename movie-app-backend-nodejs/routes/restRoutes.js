@@ -215,21 +215,20 @@ router.get('/artist/getAll/:pageSize/:pageNumber', async (req, res) => {
   const offset = (parseInt(pageNumber, 10) - 1) * limit; // Calculate offset
 
   try {
-    const artists = await artist.findAll({
+    const { rows: artists, count } = await artist.findAndCountAll({
       order: [['artistName', 'ASC']],
       limit,
       offset,
     });
 
-    const count = await artist.count();
-
-    const data = { artists, count }
+    const data = { artists, count };
 
     res.json(data);
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 router.get('/artist/get/:id', async (req, res) => {
   const schema = joi.object({
     id: joi.number().required()
@@ -248,28 +247,44 @@ router.get('/artist/get/:id', async (req, res) => {
       .catch( err => res.status(500).json(err));
   }
 });
-router.get('/artist/search/:searchTerm', async (req, res) => {
-  const schema = joi.object({
-    searchTerm: joi.string()
-  });
-  const {error, value} = schema.validate({
-    searchTerm: req.params.searchTerm
-  });
 
-  if(error){
-    msg = error;
-    res.status(400).json({msg: msg});
-  }
-  else{
-    const searchTerm = req.params.searchTerm;
-    artist.findAll({where: {
-      artistName: {
-          [Op.iLike]: `%${searchTerm}%`
-      }
-  }, order: [["artistName", "ASC"]]})
-      .then( rows => res.json(rows))
-      .catch( err => res.status(500).json(err));
 
+router.get('/artist/search/:searchTerm/:pageSize/:pageNumber', async (req, res) => {
+  const { searchTerm, pageSize, pageNumber } = req.params;
+
+  try {
+    console.log(pageSize + " : " + pageNumber);
+    const limit = parseInt(pageSize, 10); // Convert to integer
+    const offset = (parseInt(pageNumber, 10) - 1) * limit; // Calculate offset
+    const schema = joi.object({
+      searchTerm: joi.string()
+    });
+    const { error, value } = schema.validate({
+      searchTerm: req.params.searchTerm
+    });
+
+    if (error) {
+      msg = error;
+      res.status(400).json({ msg: msg });
+    } else {
+      const { rows: artists, count } = await artist.findAndCountAll({
+        where: {
+          artistName: {
+            [Op.iLike]: `%${searchTerm}%`
+          }
+        },
+        order: [["artistName", "ASC"]],
+        limit,
+        offset
+      });
+
+      const data = { artists, count };
+
+      res.json(data);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ msg: error });
   }
 });
 
@@ -604,15 +619,13 @@ router.get('/film/getAll/:pageSize/:pageNumber', async (req, res) => {
   const offset = (parseInt(pageNumber, 10) - 1) * limit; // Calculate offset
 
   try {
-    const films = await film.findAll({
+    const { rows: films, count } = await film.findAndCountAll({
       order: [['title', 'ASC']],
       limit,
       offset,
     });
 
-    const count = await film.count();
-
-    const data = { films, count }
+    const data = { films, count };
 
     res.json(data);
   } catch (error) {
@@ -641,31 +654,41 @@ router.get('/film/get/:id', async (req, res) => {
 
 
 
+router.get('/film/search/:searchTerm/:pageSize/:pageNumber', async (req, res) => {
+  const { searchTerm, pageSize, pageNumber } = req.params;
 
+  try {
+    console.log(pageSize + " : " + pageNumber);
+    const limit = parseInt(pageSize, 10); // Convert to integer
+    const offset = (parseInt(pageNumber, 10) - 1) * limit; // Calculate offset
+    const schema = joi.object({
+      searchTerm: joi.string()
+    });
+    const { error, value } = schema.validate({
+      searchTerm: req.params.searchTerm
+    });
 
+    if (error) {
+      msg = error;
+      res.status(400).json({ msg: msg });
+    } else {
+      const { rows: films, count } = await film.findAndCountAll({
+        where: {
+          title: {
+            [Op.iLike]: `%${searchTerm}%`
+          }
+        },
+        order: [["title", "ASC"]],
+        limit,
+        offset
+      });
 
-router.get('/film/search/:searchTerm', async (req, res) => {
-  const schema = joi.object({
-    searchTerm: joi.string()
-  });
-  const {error, value} = schema.validate({
-    searchTerm: req.params.searchTerm
-  });
+      const data = { films, count };
 
-  if(error){
-    msg = error;
-    res.status(400).json({msg: msg});
-  }
-  else{
-    const searchTerm = req.params.searchTerm;
-    film.findAll({where: {
-      title: {
-          [Op.iLike]: `%${searchTerm}%`
-      }
-  }, order: [["title", "ASC"]]})
-      .then( rows => res.json(rows))
-      .catch( err => res.status(500).json(err));
-
+      res.json(data);
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

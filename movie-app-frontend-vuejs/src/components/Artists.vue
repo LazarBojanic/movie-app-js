@@ -5,7 +5,7 @@
           <ul class="navbar-nav d-flex justify-content-center ms-auto">
             <li class="nav-item">
                 <form class="form-inline my-2 my-lg-0 d-flex justify-content-center">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search artists" aria-label="Search" v-model="searchText">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search artists" aria-label="Search" v-model="searchTerm">
                     <button class="btn btn-outline-success my-2 my-sm-0 custom-button" type="submit" @click.prevent="searchArtistsButton">Search</button>
                 </form>
             </li>
@@ -48,7 +48,7 @@
       return {
         currentPage: 1,
         pageSize: 20,
-        searchText: '',
+        searchTerm: '',
       }
     },
     computed: {
@@ -59,30 +59,55 @@
         return Array.from({ length: Math.ceil(this.getArtists.count / this.pageSize) }, (_, i) => i + 1);
       }
     },
-    mounted() {
-        this.fetchArtists({ pageSize: this.pageSize, pageNumber: this.currentPage });
+    async mounted() {
+        await this.fetchArtists({ pageSize: this.pageSize, pageNumber: this.currentPage });
     },
     methods: {
         ...mapActions([ 'fetchArtists' ]),
         ...mapActions([ 'searchArtists' ]),
-        goToPage(page) {
-      this.currentPage = page;
-      this.fetchArtists({ pageSize: this.pageSize, pageNumber: this.currentPage });
-    },
-    prevPage() {
+        async goToPage(page) {
+          this.currentPage = page;
+          if(this.searchTerm){
+          await this.searchArtists({searchTerm: this.searchTerm, 
+          pageSize: this.pageSize,
+          pageNumber: this.currentPage});
+        }
+        else{
+          await this.fetchArtists({ pageSize: this.pageSize, pageNumber: this.currentPage });
+        }
+        },
+    async prevPage() {
       if (this.currentPage > 1) {
         this.currentPage--
-        this.fetchArtists({ pageSize: this.pageSize, pageNumber: this.currentPage });
+        if(this.searchTerm){
+          await this.searchArtists({searchTerm: this.searchTerm, 
+          pageSize: this.pageSize,
+          pageNumber: this.currentPage});
+        }
+        else{
+          await this.fetchArtists({ pageSize: this.pageSize, pageNumber: this.currentPage });
+        }
       }
     },
-    nextPage() {
+    async nextPage() {
       if (this.currentPage < this.pages.length) {
         this.currentPage++
-        this.fetchArtists({ pageSize: this.pageSize, pageNumber: this.currentPage });
+        if(this.searchTerm){
+          await this.searchArtists({searchTerm: this.searchTerm, 
+          pageSize: this.pageSize,
+          pageNumber: this.currentPage});
+        }
+        else{
+          await this.fetchArtists({ pageSize: this.pageSize, pageNumber: this.currentPage });
+        }
       }
     },
       async searchArtistsButton(){
-        await this.searchArtists(this.searchText);
+        this.currentPage = 1;
+        console.log(this.searchTerm);
+        await this.searchArtists({searchTerm: this.searchTerm, 
+          pageSize: this.pageSize,
+          pageNumber: this.currentPage});
       }
     }
   }

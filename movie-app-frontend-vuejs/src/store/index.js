@@ -139,11 +139,11 @@ export default new Vuex.Store({
           commit('setFilm', film);
         });
     },
-    fetchFilms({ commit }, { pageSize = 10, pageNumber = 1 }) {
+    fetchFilms({ commit }, data) {
       const token = Cookies.get('token');
-      const url = `http://94.189.193.50:8001/api/film/getAll/${pageSize}/${pageNumber}`;
-    
-      return fetch(url, {
+      const pageSize = data.pageSize;
+      const pageNumber = data.pageNumber;
+      return fetch(`http://94.189.193.50:8001/api/film/getAll/${pageSize}/${pageNumber}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -153,9 +153,12 @@ export default new Vuex.Store({
         commit('setFilms', films);
       });
     },
-    async searchFilms({ commit }, searchTerm){
+    async searchFilms({ commit }, data){
       const token = Cookies.get('token');
-      const res = await fetch('http://94.189.193.50:8001/api/film/search/'.concat(searchTerm), {
+      const searchTerm = data.searchTerm;
+      const pageSize = data.pageSize;
+      const pageNumber = data.pageNumber;
+      const res = await fetch(`http://94.189.193.50:8001/api/film/search/${searchTerm}/${pageSize}/${pageNumber}`, {
           headers: {
               'Authorization': `Bearer ${token}`
           }});
@@ -172,8 +175,10 @@ export default new Vuex.Store({
           commit('setArtist', artist);
         });
     },
-    fetchArtists({ commit }, { pageSize = 10, pageNumber = 1 }) {
+    fetchArtists({ commit }, data) {
       const token = Cookies.get('token');
+      const pageSize = data.pageSize;
+      const pageNumber = data.pageNumber;
       return fetch(`http://94.189.193.50:8001/api/artist/getAll/${pageSize}/${pageNumber}`, {
         headers: {
             'Authorization': `Bearer ${token}`
@@ -183,9 +188,12 @@ export default new Vuex.Store({
           commit('setArtists', artists);
         });
     },
-    async searchArtists({ commit }, searchTerm){
+    async searchArtists({ commit }, data){
       const token = Cookies.get('token');
-        const res = await fetch('http://94.189.193.50:8001/api/artist/search/'.concat(searchTerm), {
+      const searchTerm = data.searchTerm;
+      const pageSize = data.pageSize;
+      const pageNumber = data.pageNumber;
+        const res = await fetch(`http://94.189.193.50:8001/api/artist/search/${searchTerm}/${pageSize}/${pageNumber}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }});
