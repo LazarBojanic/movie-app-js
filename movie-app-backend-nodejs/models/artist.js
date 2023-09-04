@@ -8,13 +8,33 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      //this.belongsToMany(models.film, {through: models.crewMember});
+      this.belongsToMany(models.film, {through: models.crewMember});
     }
   };
   Artist.init({
     artistName : {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: false
+    },
+    birthday : {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+      unique: false
+    },
+    deathday : {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+      unique: false
+    },
+    placeOfBirth : {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: false
+    },
+    biography : {
+      type: DataTypes.STRING(5000),
+      allowNull: true,
       unique: false
     },
     imageUrl : {

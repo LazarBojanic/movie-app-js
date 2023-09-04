@@ -11,15 +11,17 @@
       <thead>
         <tr>
           <th>Film Title</th>
-          <th>Year</th>
+          <th>Release Date</th>
           <th>Role</th>
+          <th>Character Name</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="credit in getArtistCredits" :key="credit.film.filmId">
           <td>{{ credit.film.title }}</td>
-          <td>{{ credit.film.releaseYear }}</td>
+          <td>{{ credit.film.releaseDate }}</td>
           <td>{{ credit.crewMemberRole }}</td>
+          <td>{{ credit.characterName }}</td>
         </tr>
       </tbody>
     </table>

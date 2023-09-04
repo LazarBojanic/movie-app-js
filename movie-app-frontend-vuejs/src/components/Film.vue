@@ -5,8 +5,8 @@
         <br/>
         <img v-if="film.imageUrl" :src=filmImageUrl />
         <p v-else>Image not available</p>
-        <h3>Rating: {{ film.rating }}</h3>
-        <h3>Year: {{ film.releaseYear }}</h3> 
+        <h3 v-if="film.rating">Rating: {{ film.rating }}</h3>
+        <h3 v-if="film.releaseDate">{{ releaseYear }}</h3> 
       </div>
       <button @click="addFilmToLibraryButton" class="btn btn-primary">+</button>
     </div>
@@ -26,11 +26,13 @@
       data() {
         return {
           filmImageUrl: 'https://image.tmdb.org/t/p/w154',
+          releaseYear: 1800,
           clicked: false
         }
       },
       mounted() {
         this.filmImageUrl = 'https://image.tmdb.org/t/p/w154'.concat(this.film.imageUrl);
+        this.releaseYear = new Date(this.film.releaseDate).getFullYear();
         //alert(this.filmImageUrl);
       },
       methods: {

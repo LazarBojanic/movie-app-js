@@ -8,10 +8,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      
-      this.belongsTo(models.artist, {foreignKey: 'artistId'});
-      this.belongsTo(models.film, {foreignKey: 'filmId'});
-      
+      this.belongsTo(models.artist, { foreignKey: 'artistId' });
+      this.belongsTo(models.film, { foreignKey: 'filmId' });
     }
   };
   CrewMember.init({
@@ -19,7 +17,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       unique: false
-    }
+    },
+    characterName : {
+      type: DataTypes.STRING(500),
+      allowNull: true,
+      unique: false
+    },
   }
   ,{
     sequelize,

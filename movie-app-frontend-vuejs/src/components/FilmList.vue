@@ -8,7 +8,7 @@
         </div>
         <br/>
         <div class="col-sm-6">
-          <button class="btn btn-primary" @click="addFilmToFilmListButtonSocket(filmNamePar)">Add Film to List</button>
+          <button class="btn btn-primary" @click="addFilmToFilmListButton(filmNamePar)">Add Film to List</button>
         </div>
       <div class="row">
         <div v-for="filmInList in currentPageFilms" :key="filmInList.film.filmId" class="col-sm-4">
@@ -36,23 +36,9 @@
   import FilmInList from '@/components/FilmInList.vue'
   import Cookies from 'js-cookie'
   import jwtDecode from 'jwt-decode';
-  import io from 'socket.io-client';
   import Joi from 'joi-browser';
   import { mapState, mapActions, mapGetters } from "vuex";
   import store from '../store/index';
-
-      const token = Cookies.get('token');
-      let socket = io('http://95.180.97.206:8000', {
-          query: {
-              authorization: `Bearer ${token}`
-          }
-      });
-      socket.connect();
-      socket.on("filmAdded", filmsInList => {
-        console.log('yoyoyoyoyo' + filmsInList);
-        store.commit('setFilmsInList', filmsInList);
-      });
-
 
   export default {
     name: 'FilmList',
@@ -123,26 +109,6 @@
             });
             console.log('added film to list');
           })
-      },
-      async addFilmToFilmListButtonSocket(filmNamePar){
-        await this.searchFilms(filmNamePar);
-        const firstFilm = this.getFilms[0];
-          console.log(firstFilm);
-          const filmListData = {
-            filmListId: this.getFilmList.id,
-            filmId: firstFilm.id
-          }
-          
-          socket.emit("addFilmToFilmList", filmListData);
-          const filmLibraryData = {
-            serviceUserId: jwtDecode(Cookies.get('token')).id,
-            filmId: this.getFilms[0].id
-          }
-          this.addFilmToLibrary(filmLibraryData).then(() => {
-            console.log('added film to library');
-          });
-          console.log('added film to list');
-          
       }
     }
   }

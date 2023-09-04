@@ -13,7 +13,7 @@
       </div>
     </nav>
     <div class="row">
-      <div v-for="film in currentPageFilms" :key="film.id" class="col-sm-4">
+      <div v-for="film in getFilms.films" :key="film.id" class="col-sm-4">
         <film :film="film"></film>
       </div>
     </div>
@@ -46,39 +46,36 @@ export default {
   data() {
     return {
       currentPage: 1,
-      filmsPerPage: 20,
+      pageSize: 20,
       searchText: '',
     }
   },
   computed: {
       ...mapGetters([ 'getFilms' ]),
-    currentPageFilms() {
-      const start = (this.currentPage - 1) * this.filmsPerPage;
-      return Object.values(this.getFilms).slice(start, start + this.filmsPerPage);
-    },
     pages() {
-      return Array.from({ length: Math.ceil(Object.values(this.getFilms).length / this.filmsPerPage) }, (_, i) => i + 1);
+      return Array.from({ length: Math.ceil(this.getFilms.count / this.pageSize) }, (_, i) => i + 1);
     }
   },
   mounted() {
-
-    this.fetchFilms();
-
+    this.fetchFilms({ pageSize: this.pageSize, pageNumber: this.currentPage });
   },
   methods: {
     ...mapActions(["fetchFilms"]),
     ...mapActions(["searchFilms"]),
     goToPage(page) {
-      this.currentPage = page
+      this.currentPage = page;
+      this.fetchFilms({ pageSize: this.pageSize, pageNumber: this.currentPage });
     },
     prevPage() {
       if (this.currentPage > 1) {
         this.currentPage--
+        this.fetchFilms({ pageSize: this.pageSize, pageNumber: this.currentPage });
       }
     },
     nextPage() {
       if (this.currentPage < this.pages.length) {
         this.currentPage++
+        this.fetchFilms({ pageSize: this.pageSize, pageNumber: this.currentPage });
       }
     },
     async searchFilmsButton(){

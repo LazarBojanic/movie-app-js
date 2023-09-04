@@ -77,7 +77,7 @@
           return;
         }
 
-        fetch('http://95.180.97.206:8500/auth/register', {
+        fetch('http://94.189.193.50:8500/auth/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

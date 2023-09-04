@@ -13,7 +13,7 @@
         </div>
       </nav>
       <div class="row">
-        <div v-for="artist in currentPageArtists" :key="artist.id" class="col-sm-4">
+        <div v-for="artist in getArtists.artists" :key="artist.id" class="col-sm-4">
           <artist :artist="artist"></artist>
         </div>
       </div>
@@ -47,7 +47,7 @@
     data() {
       return {
         currentPage: 1,
-        artistsPerPage: 20,
+        pageSize: 20,
         searchText: '',
       }
     },
@@ -55,33 +55,32 @@
         ...mapGetters([
             'getArtists'
         ]),
-      currentPageArtists() {
-        const start = (this.currentPage - 1) * this.artistsPerPage;
-        return Object.values(this.getArtists).slice(start, start + this.artistsPerPage);
-      },
       pages() {
-        return Array.from({ length: Math.ceil(Object.values(this.getArtists).length / this.artistsPerPage) }, (_, i) => i + 1);
+        return Array.from({ length: Math.ceil(this.getArtists.count / this.pageSize) }, (_, i) => i + 1);
       }
     },
     mounted() {
-        this.fetchArtists();
+        this.fetchArtists({ pageSize: this.pageSize, pageNumber: this.currentPage });
     },
     methods: {
         ...mapActions([ 'fetchArtists' ]),
         ...mapActions([ 'searchArtists' ]),
-      goToPage(page) {
-        this.currentPage = page;
-      },
-      prevPage() {
-        if (this.currentPage > 1) {
-          this.currentPage--;
-        }
-      },
-      nextPage() {
-        if (this.currentPage < this.pages.length) {
-          this.currentPage++;
-        }
-      },
+        goToPage(page) {
+      this.currentPage = page;
+      this.fetchArtists({ pageSize: this.pageSize, pageNumber: this.currentPage });
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--
+        this.fetchArtists({ pageSize: this.pageSize, pageNumber: this.currentPage });
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.pages.length) {
+        this.currentPage++
+        this.fetchArtists({ pageSize: this.pageSize, pageNumber: this.currentPage });
+      }
+    },
       async searchArtistsButton(){
         await this.searchArtists(this.searchText);
       }

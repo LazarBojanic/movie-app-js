@@ -46,8 +46,8 @@ import router from './router';
 export default {
    data() {
       return {
-         token: Cookies.get('token'),
-         userRole: jwtDecode(token).userRole
+         token: '',
+         userRole: ''
       }
    },
    

@@ -9,13 +9,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.belongsToMany(models.artist, {through: models.crewMember});
+
+      this.belongsToMany(models.studio, {through: models.studioOfFilm});
+      this.belongsToMany(models.genre, {through: models.genreOfFilm});
+      this.belongsToMany(models.country, {through: models.countryOfFilm});
+
       this.belongsToMany(models.serviceUser, {through: models.filmInLibrary});
-      
       this.hasMany(models.filmInList, { foreignKey: 'filmId'/* , as: 'filmsInList'*/});
 
-      this.belongsTo(models.studio);
-      this.belongsTo(models.genre);
-      this.belongsTo(models.country);
     }
   };
   Film.init({
@@ -34,9 +35,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       unique: false
     },
-    releaseYear : {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+    releaseDate : {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
       unique: false
     },
     imageUrl : {

@@ -6,9 +6,12 @@
       <h3>Rating: {{ getFilm.rating }}</h3>
       <h3>Year: {{ getFilm.releaseYear }}</h3>
       <p>{{ getFilm.synopsis }}</p>
-      <h3>Studio: {{ getStudio.studioName }}</h3>
-      <h3>Genre: {{ getGenre.genreName }}</h3>
-      <h3>Country: {{ getCountry.countryName }}</h3>
+      <h3>Studios:</h3>
+        <h4 v-for="studio in getStudiosForFilm" :key="studio.studioId">{{ studio.studio.studioName }}</h4>
+        <h3>Genres:</h3>
+        <h4 v-for="genre in getGenresForFilm" :key="genre.genreId">{{ genre.genre.genreName }}</h4>
+        <h3>Countries:</h3>
+        <h4 v-for="country in getCountriesForFilm" :key="country.countryId">{{ country.country.countryName }}</h4>
       <table class="table table-on-top">
       <thead>
         <tr>
@@ -17,9 +20,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="crewMember in getCrewMembers" :key="crewMember.artist.artistId">
+        <tr v-for="crewMember in getCrewMembers" :key="crewMember.id">
           <td>{{ crewMember.artist.artistName }}</td>
           <td>{{ crewMember.crewMemberRole }}</td>
+          <td>{{ crewMember.characterName }}</td>
         </tr>
       </tbody>
     </table>
@@ -40,25 +44,26 @@
 
     computed: {
       ...mapGetters([ 'getFilm' ]),
-      ...mapGetters([ 'getStudio' ]),
-      ...mapGetters([ 'getGenre' ]),
-      ...mapGetters([ 'getCountry' ]),
+      ...mapGetters([ 'getStudiosForFilm' ]),
+      ...mapGetters([ 'getGenresForFilm' ]),
+      ...mapGetters([ 'getCountriesForFilm' ]),
       ...mapGetters([ 'getCrewMembers' ]),
       filmImageUrl() {
         return 'https://image.tmdb.org/t/p/w154' + this.getFilm.imageUrl;
       }
     },
     methods:{
-      ...mapActions(['fetchStudioForFilm']),
-      ...mapActions(['fetchGenreForFilm']),
-      ...mapActions(['fetchCountryForFilm']),
-      ...mapActions(['fetchCrewMembersForFilm']),
+      ...mapActions(['fetchStudiosForFilm']),
+      ...mapActions(['fetchGenresForFilm']),
+      ...mapActions(['fetchCountriesForFilm']),
+      ...mapActions(['fetchCrewMembers']),
     },
-    mounted() {
-          this.fetchCrewMembersForFilm(this.getFilm.id);
-          this.fetchStudioForFilm(this.getFilm.studioId);
-          this.fetchGenreForFilm(this.getFilm.genreId);
-          this.fetchCountryForFilm(this.getFilm.countryId);
+    async mounted() {
+          await this.fetchCrewMembers(this.getFilm.id);
+          await this.fetchStudiosForFilm(this.getFilm.id);
+          await this.fetchCountriesForFilm(this.getFilm.id);
+          await this.fetchGenresForFilm(this.getFilm.id);
+          console.log(this.getStudiosForFilm)
     }
   }
   </script>

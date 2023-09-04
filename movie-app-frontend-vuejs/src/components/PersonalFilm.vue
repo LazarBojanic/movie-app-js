@@ -21,7 +21,6 @@
   import { mapState, mapActions, mapGetters } from 'vuex';
   import Cookies from 'js-cookie'
   import jwtDecode from 'jwt-decode';
-  import io from 'socket.io-client';
   import Joi from 'joi-browser';
   
   export default {
@@ -36,36 +35,7 @@
         ...mapActions(["submitReview"]),
    
       submitReviewButton() {
-        const socket = io('http://95.180.97.206:8000');
-        socket.emit('message');
-         const data = {
-            id: this.getFilmInLibrary.id,
-            filmId: this.getFilmInLibrary.film.filmId,
-            serviceUserId: this.getFilmInLibrary.serviceUser.userId,
-            liked: this.checkboxValue,
-            watched: 'Yes',
-            reviewed: 'Yes',
-            review: this.filmReview
-         }
-        const schema = Joi.object({
-            id: Joi.number().required(),
-            filmId: Joi.number().required(),
-            serviceUserId: Joi.number().required(),
-            liked: Joi.string().required(),
-            watched: Joi.string().required(),
-            reviewed: Joi.string().required(),
-            review: Joi.string().allow(null, ''),
-        });
-        const { error } = schema.validate({id: data.id, filmId: data.filmId, serviceUserId: data.serviceUserId, 
-            liked: data.liked, watched: data.watched, reviewed: data.reviewed, review: data.review});
-        if (error) {
-            console.log(error);
-            return;
-        }
-
-        this.submitReview(data).then(() => {
-            console.log('review submited successfully');
-        });
+       
       },
       changeHeartColor() {
         if(this.checkboxValue == 'Yes'){

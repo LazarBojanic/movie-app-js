@@ -14,7 +14,7 @@ require('dotenv').config();
 const joi = require('joi');
 
 router.post('/register', (req, res) => {
-  console.log('registiring');
+  console.log('registering');
 
   const data = {
     email: req.body.email,
