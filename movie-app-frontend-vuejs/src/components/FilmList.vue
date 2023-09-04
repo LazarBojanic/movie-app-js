@@ -67,9 +67,9 @@
         return Array.from({ length: Math.ceil(Object.values(this.getFilmsInList).length / this.filmsPerPage) }, (_, i) => i + 1);
       }
     },
-    mounted() {
+    async mounted() {
         //console.log(this.filmListObject.id);
-      this.fetchFilmsInList(this.$route.params.id);
+      await this.fetchFilmsInList(this.$route.params.id);
   
     },
     methods: {
@@ -92,23 +92,23 @@
         }
       },
       async addFilmToFilmListButton(filmNamePar){
-        await this.searchFilms(filmNamePar);
-        const firstFilm = this.getFilms[0];
-          console.log(firstFilm);
+        await this.searchFilms({searchTerm: filmNamePar, 
+          pageSize: 1,
+          pageNumber: 1});
+        const firstFilm = this.getFilms.films[0];
+          console.log('film title' + firstFilm.title);
           const filmListData = {
             filmListId: this.getFilmList.id,
             filmId: firstFilm.id
           }
-          this.addFilmToFilmList(filmListData).then(() =>{
-            const filmLibraryData = {
+          await this.addFilmToFilmList(filmListData);
+          const filmLibraryData = {
               serviceUserId: jwtDecode(Cookies.get('token')).id,
-              filmId: this.getFilms[0].id
+              filmId: firstFilm.id
             }
-            this.addFilmToLibrary(filmLibraryData).then(() => {
-              console.log('added film to library');
-            });
+            await this.addFilmToLibrary(filmLibraryData);
+            console.log('added film to library');
             console.log('added film to list');
-          })
       }
     }
   }
