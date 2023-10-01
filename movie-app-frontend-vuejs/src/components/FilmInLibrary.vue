@@ -40,7 +40,7 @@
         ...mapActions(['fetchFilmInLibrary']),
         ...mapActions(['fetchFilm']),
         ...mapActions(['removeFilmFromLibrary']),
-        
+        ...mapActions(["fetchFilmsInLibrary"]),
         navigateToPersonalFilmPage() {
            /* const data = {
                 userId: this.filmInLibraryProp.serviceUser.userId, 
@@ -64,7 +64,9 @@
         removeFilmFromLibraryButton(){
           console.log(this.filmInLibraryProp);
           this.removeFilmFromLibrary(this.filmInLibraryProp.id).then(() => {
-            console.log('removed film');
+            this.fetchFilmsInLibrary().then(() => {
+              console.log('removed film');
+            });
           })
         }
       }
